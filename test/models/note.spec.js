@@ -4,7 +4,7 @@
 describe('Note Model', function () {
 
     beforeEach(function () {
-        this.NoteModel = new 892834.Models.Note();
+        this.NoteModel = new notesApp.Models.Note();
     });
 
 });

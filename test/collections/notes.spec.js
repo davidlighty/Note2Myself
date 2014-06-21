@@ -4,7 +4,7 @@
 describe('Notes Collection', function () {
 
     beforeEach(function () {
-        this.NotesCollection = new 892834.Collections.Notes();
+        this.NotesCollection = new notesApp.Collections.Notes();
     });
 
 });

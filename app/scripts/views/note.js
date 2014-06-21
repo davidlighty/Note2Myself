@@ -6,14 +6,14 @@ notesApp.Views = notesApp.Views || {};
     'use strict';
 
     notesApp.Views.Note = Backbone.View.extend({
-        el:'.note-list-section'
+        el:'.notes-list'
         template: JST['app/scripts/templates/note.ejs'],
 
-        tagName: 'div',
+        tagName: 'li',
 
         id: '',
 
-        className: '',
+        className: 'note-item',
 
         events: {},
 

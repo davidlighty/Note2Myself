@@ -1,8 +1,92 @@
 body {
-    background: #fafafa;
+    background: #edf5f9 bottom repeat-x;
+    height: 460px;
+    width: 100%;
+    min-width: 960px;
+    position: absolute;
+    z-index: -1;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-
 .hero-unit {
     margin: 50px auto 0 auto;
-    width: 300px;
+    width: 80%;
+}
+a {
+    color: #4183c4;
+    text-decoration: none;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.note-item {
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 0.3em;
+    *display: inline;
+    *margin-right: 0.3em;
+    *zoom: 1;
+    max-height: 290px;
+    width: 33.333%;
+}
+.note-item h1 {
+    margin: 2px;
+    font-size: 120%;
+}
+.note-item > div {
+    padding: 8px;
+    margin: 7px;
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 1px 1px 3px 0px black;
+    position: relative;
+}
+.note-item .note-desc {
+    padding: 0 0 0 7px;
+    font-size: 95%;
+    font-style: italic;
+    margin-left: 2px;
+}
+.note-item > div small {
+    display: inline-block;
+}
+.note-link {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    opacity: 0.6;
+}
+.note-link:hover{
+	opacity: 1;
+}
+.note-stats {
+    position: relative;
+    top: 9px;
+    z-index: 5;
+    float: right;
+}
+.note-stats li {
+    float: left;
+    list-style: none;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 20px;
+    color: #666;
+    opacity: 0.6;
+}
+.note-card:hover .note-stats li{
+	opacity: 1;
+}
+.note-stats li+li {
+    margin-left: 10px;
+}
+.note-stats li a {
+    display: inline-block;
+    padding: 0 5px;
+    color: #666;
+}
+.note-stats li a .octicon {
+    color: #888;
 }

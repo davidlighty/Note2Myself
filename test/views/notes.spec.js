@@ -4,7 +4,7 @@
 describe('Notes View', function () {
 
     beforeEach(function () {
-        this.NotesView = new 892834.Views.Notes();
+        this.NotesView = new notesApp.Views.Notes();
     });
 
 });
