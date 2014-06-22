@@ -8,7 +8,9 @@ window.notesApp = {
     Routers: {},
     init: function () {
         'use strict';
-        console.log('Hello from Backbone!');
+        console.log('Notes App Init');
+        // Init the main notes view
+        var notesView = new notesApp.Views.Notes();
     }
 };
 

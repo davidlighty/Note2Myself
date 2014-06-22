@@ -8,7 +8,7 @@ notesApp.Collections = notesApp.Collections || {};
     notesApp.Collections.Notes = Backbone.Collection.extend({
 
         model: notesApp.Models.Notes,
-        url:'api/notes.php'
+        url:'api/notes'
 
     });
 
