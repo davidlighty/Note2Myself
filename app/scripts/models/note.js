@@ -6,20 +6,12 @@ notesApp.Models = notesApp.Models || {};
     'use strict';
 
     notesApp.Models.Note = Backbone.Model.extend({
-
-        url: '',
-
         initialize: function() {
+            console.log('Notes Model :: Init');
         },
-
-        defaults: {
-        },
-
-        validate: function(attrs, options) {
-        },
-
-        parse: function(response, options)  {
-            return response;
+        parse:function(data){
+            console.log('data',data);
+            return data;
         }
     });
 

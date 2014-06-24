@@ -1,15 +1,9 @@
 /*global notesApp, Backbone*/
-
 notesApp.Collections = notesApp.Collections || {};
-
-(function () {
+(function() {
     'use strict';
-
     notesApp.Collections.Notes = Backbone.Collection.extend({
-
-        model: notesApp.Models.Notes,
-        url:'api/notes'
-
+        model: notesApp.Models.Note,
+        url: 'api/notes'
     });
-
 })();
