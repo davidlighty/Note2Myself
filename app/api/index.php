@@ -9,7 +9,12 @@
 
 */
 session_start();
+
 require 'Slim/Slim.php';
+require 'mongo/crud.php';
+require 'mongo/list.php';
+require 'mongo/command.php';
+
 use Slim\Slim;
 Slim::registerAutoloader();
 
@@ -18,14 +23,16 @@ $app = new Slim(array(
     'mode' => 'development'
 ));
 
+// Set up DB Mongo connection
+define('MONGO_HOST', '127.0.0.1');
+define('DB', 'noteApp');
+
+
 $app->get('/',function(){
 	echo "API Start Page";
 });
 
-$app->get('/notes', function(){
-	//'getNotes'
-	echo getNotes();
-});
+$app->get('/notes','_list');
 
 // $app->get('/notes/:id', authorize('user'),	'getNote');
 // $app->get('/notes/search/:query', authorize('user'), 'getNotesByName');
@@ -37,7 +44,26 @@ $app->get('/notes', function(){
 $app->run();
 // api/index.php
 
+// Return a collection 
+function _list(){
+  
+  $select = array(
+    'limit' =>    (isset($_GET['limit']))   ? $_GET['limit'] : false, 
+    'page' =>     (isset($_GET['page']))    ? $_GET['page'] : false,
+    'filter' =>   (isset($_GET['filter']))  ? $_GET['filter'] : false,
+    'regex' =>    (isset($_GET['regex']))   ? $_GET['regex'] : false,
+    'sort' =>     (isset($_GET['sort']))    ? $_GET['sort'] : false
+  );
+  
+  $data = mongoList(
+    MONGO_HOST, 
+    DB, 
+    'notes',
+    $select
+  );
+  echo json_encode($data);
 
+}
 
 
 function getNotes(){
