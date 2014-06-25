@@ -3,6 +3,7 @@ notesApp.Views = notesApp.Views || {};
 (function() {
     'use strict';
     notesApp.Views.Notes = Backbone.View.extend({
+        el:$('.main'),
         template: JST['app/scripts/templates/notes.ejs'],
         tagName: 'div',
         initialize: function() {
@@ -19,17 +20,19 @@ notesApp.Views = notesApp.Views || {};
             console.log('Notes View::Render');
             var self = this;
             console.log(this.collection.models);
+             this.$el.html(this.template());
             _.each(this.collection.models, function(note) {
-                console.log('note::' + note.toJSON());
+               // console.log('note::' + note.toJSON());
                 self.renderNote(note);
             }, this);
+            return this;
         },
         renderNote: function(note) {
             console.log('Notes View::RenderNote');
-            var repoView = new notesApp.Views.Note({
+            var noteView = new notesApp.Views.Note({
                 model: note
             });
-            this.$el.append(repoView.render().el);
+            this.$el.append(noteView.render().el);
         }
     });
 })();

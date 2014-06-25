@@ -6,7 +6,7 @@ notesApp.Views = notesApp.Views || {};
     'use strict';
 
     notesApp.Views.Note = Backbone.View.extend({
-        el:'.notes-list',
+       // el:$('.notes-list'),
         template: JST['app/scripts/templates/note.ejs'],
         tagName: 'li',
         id: '',
@@ -18,6 +18,8 @@ notesApp.Views = notesApp.Views || {};
         },
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
+            console.log('el',this.el);
+            return this;
         }
 
     });
