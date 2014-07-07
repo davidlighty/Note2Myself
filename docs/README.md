@@ -29,6 +29,10 @@ Create a "twitter" -esque steaming notes system.  This is an API system, which a
 - Allow a local user auth scenario
 
 
+#### phpDocumentor
+> http://www.phpdoc.org/
+
+Useful tool to take docblocks in code and auto-create documentation!
 
 
 #### TravisCI
@@ -47,6 +51,8 @@ This is a continous build tool that works on commits into a public github reposi
 Very useful tool that helps test with support for modules and dependencies.
 > Additional Information: http://docs.travis-ci.com/user/languages/php/
 
+DB Setup Info
+> http://docs.travis-ci.com/user/database-setup/
 
 #### PHPUnit
 > http://phpunit.de/getting-started.html
