@@ -11,7 +11,7 @@ class MongoTests extends PHPUnit_Framework_TestCase {
 	protected function setUp() {
 		try {
 		    $conn = new MongoClient(); // connects to localhost:27017
-		    $this->db = $conn->'noteApp';
+		    $this->db = $conn->{'noteApp'};
 		    $this->collection = $this->db->{'notes'};
 		}catch(Exception $err){
 			var_dump($err);
