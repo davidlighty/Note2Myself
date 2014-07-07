@@ -21,7 +21,7 @@ notesApp.Views = notesApp.Views || {};
         },
         clear: function() {
             console.log('delete note', this.model.toJSON());
-            this.model.destroy(); // Calls the API delete.
+            this.model.destroy();
         }
     });
 })();

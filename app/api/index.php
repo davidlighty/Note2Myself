@@ -1,4 +1,5 @@
 <?php
+
 /*
 
     Notes API using Slim Framework
@@ -18,10 +19,7 @@ require 'mongo/command.php';
 use Slim\Slim;
 Slim::registerAutoloader();
 
-$app = new Slim(array(
-	'debug' => true,
-    'mode' => 'development'
-));
+$app = new Slim(array('debug' => true, 'mode' => 'development'));
 $log = $app->getLog();
 
 // Set up DB Mongo connection
@@ -31,219 +29,190 @@ define('DB', 'noteApp');
 // route middleware for simple API authentication
 function authenticate(\Slim\Route $route) {
     $app = \Slim\Slim::getInstance();
-    if (validateUserKey() === false) {
-      $app->halt(401);
+    $uid = $app->getEncryptedCookie('uid');
+    $key = $app->getEncryptedCookie('key');
+    if (validateUserKey($uid, $key) === false) {
+        $app->halt(401);
     }
 }
 
 function validateUserKey($uid, $key) {
-  // insert your (hopefully complex) validation routine here
-  return false;
+    
+    // insert your (hopefully complex) validation routine here
+    return false;
 }
 
-$app->get('/',function(){
-	echo "Notes API";
+$app->get('/', function () {
+    echo "Notes API";
 });
 
 // Main API Methods
 
-// Notes GET Routes
+/**
+ * Get notes
+ * @api
+ */
+$app->get('/notes', '_list');
 
 /**
-* Get notes
-* @api
-*/
-$app->get('/notes','_list');
+ * Get a specific note by user
+ * Must be authorized first
+ * @param string id
+ * @api
+ */
+$app->get('/notes/:id', 'authenticate', '_read');
 
 /**
-* Get a specific note by user
-* Must be authorized first
-* @param string id
-* @api
-*/
-$app->get('/notes/:id','authenticate','_read');
+ * Find notes with this query term
+ * @api
+ */
 
-/**
-* Find notes with this query term
-* @api
-*/
 //$app->get('/notes/search/:query', 'authenticate', 'getNotesByName');
 
+
+
 /**
-* Find notes from a specific timestamp
-* @api
-*/
+ * Find notes from a specific timestamp
+ * @api
+ */
+
 //$app->get('/notes/modifiedsince/:timestamp', 'authenticate', 'findByModifiedDate');
 
-/**
-* Create a note
-* @api
-*/
-$app->post('/notes/','authenticate','_create');
+
 
 /**
-* Update a note
-* @param string id
-* @api
-*/
-$app->put('/notes/:id','authenticate','_update');
+ * Create a note
+ * @api
+ */
+$app->post('/notes/', 'authenticate', '_create');
 
 /**
-* Delete a note
-* @param string id
-* @api
-*/
-$app->delete('/notes/:id','authenticate','_delete');
+ * Update a note
+ * @param string id
+ * @api
+ */
+$app->put('/notes/:id', 'authenticate', '_update');
+
+/**
+ * Delete a note
+ * @param string id
+ * @api
+ */
+$app->delete('/notes/:id', 'authenticate', '_delete');
 
 // // I add the login route as a post, since we will be posting the login form info
 // $app->post('/login', 'login');
 
 $app->run();
+
 // api/index.php
 
-// Return a collection 
-function _list(){
-  
-  $select = array(
-    'limit' =>    (isset($_GET['limit']))   ? $_GET['limit'] : false, 
-    'page' =>     (isset($_GET['page']))    ? $_GET['page'] : false,
-    'filter' =>   (isset($_GET['filter']))  ? $_GET['filter'] : false,
-    'regex' =>    (isset($_GET['regex']))   ? $_GET['regex'] : false,
-    'sort' =>     (isset($_GET['sort']))    ? $_GET['sort'] : false
-  );
-  
-  $data = mongoList(
-    MONGO_HOST, 
-    DB, 
-    'notes',
-    $select
-  );
-  echo json_encode($data);
-
+// Return a collection
+function _list() {
+    
+    $select = array('limit' => (isset($_GET['limit'])) ? $_GET['limit'] : false, 'page' => (isset($_GET['page'])) ? $_GET['page'] : false, 'filter' => (isset($_GET['filter'])) ? $_GET['filter'] : false, 'regex' => (isset($_GET['regex'])) ? $_GET['regex'] : false, 'sort' => (isset($_GET['sort'])) ? $_GET['sort'] : false);
+    
+    $data = mongoList(MONGO_HOST, DB, 'notes', $select);
+    echo json_encode($data);
 }
 
 // Create
-function _create(){
-
-  $document = json_decode(Slim::getInstance()->request()->getBody(), true);
-
-  $data = mongoCreate(
-    MONGO_HOST, 
-    DB, 
-    'notes',
-    $document
-  ); 
-  echo json_encode($data);
-  
+function _create() {
+    
+    $document = json_decode(Slim::getInstance()->request()->getBody(), true);
+    
+    $data = mongoCreate(MONGO_HOST, DB, 'notes', $document);
+    echo json_encode($data);
 }
 
 // Read
-function _read($id){
-
-  $data = mongoRead(
-    MONGO_HOST,
-    DB,
-    'notes',
-    $id
-  );
-  echo json_encode($data);
-
+function _read($id) {
+    
+    $data = mongoRead(MONGO_HOST, DB, 'notes', $id);
+    echo json_encode($data);
 }
 
-// Update 
-function _update($id){
-
-  $document = json_decode(Slim::getInstance()->request()->getBody(), true);
-
-  $data = mongoUpdate(
-    MONGO_HOST, 
-    DB, 
-    'notes', 
-    $id,
-    $document
-  ); 
-  echo json_encode($data);
-  
+// Update
+function _update($id) {
+    
+    $document = json_decode(Slim::getInstance()->request()->getBody(), true);
+    
+    $data = mongoUpdate(MONGO_HOST, DB, 'notes', $id, $document);
+    echo json_encode($data);
 }
 
 // Delete
-function _delete($id){
-
-  $data = mongoDelete(
-    MONGO_HOST, 
-    DB, 
-    'notes', 
-    $id
-  ); 
-  echo json_encode($data);
-
+function _delete() {
+    $document = json_decode(Slim::getInstance()->request()->getBody(), true);
+    $id = $document['id'];
+    $data = mongoDelete(MONGO_HOST, DB, 'notes', $id);
+    echo json_encode($data);
 }
 
-
-function getNotes(){
-	$sampleNotes="[{
-		'title': 'Sample Title A'
-	,	'description': 'Sample description for this note.'
-	,	'userid': '0001'
-	,	'text':'This is a sample note text.'
-	,	'type':'text'
+function getNotes() {
+    $sampleNotes = "[{
+    'title': 'Sample Title A'
+  , 'description': 'Sample description for this note.'
+  , 'userid': '0001'
+  , 'text':'This is a sample note text.'
+  , 'type':'text'
 },
 {
-		'title': 'Sample Title B'
-	,	'description': 'Sample description for this note.'
-	,	'userid': '0001'
-	,	'text':'This is a sample note text.'
-	,	'type':'text'
+    'title': 'Sample Title B'
+  , 'description': 'Sample description for this note.'
+  , 'userid': '0001'
+  , 'text':'This is a sample note text.'
+  , 'type':'text'
 },
 {
-		'title': 'Sample Title C'
-	,	'description': 'Sample description for this note.'
-	,	'userid': '0001'
-	,	'text':'This is a sample note text.'
-	,	'type':'text'
+    'title': 'Sample Title C'
+  , 'description': 'Sample description for this note.'
+  , 'userid': '0001'
+  , 'text':'This is a sample note text.'
+  , 'type':'text'
 },
 {
-		'title': 'Sample Title D'
-	,	'description': 'Sample description for this note.'
-	,	'userid': '0001'
-	,	'text':'This is a sample note text.'
-	,	'type':'text'
+    'title': 'Sample Title D'
+  , 'description': 'Sample description for this note.'
+  , 'userid': '0001'
+  , 'text':'This is a sample note text.'
+  , 'type':'text'
 },
 {
-		'title': 'Sample Title E'
-	,	'description': 'Sample description for this note.'
-	,	'userid': '0001'
-	,	'text':'This is a sample note text.'
-	,	'type':'text'
+    'title': 'Sample Title E'
+  , 'description': 'Sample description for this note.'
+  , 'userid': '0001'
+  , 'text':'This is a sample note text.'
+  , 'type':'text'
 },
 {
-		'title': 'Sample Title F'
-	,	'description': 'Sample description for this note.'
-	,	'userid': '0001'
-	,	'text':'This is a sample note text.'
-	,	'type':'text'
+    'title': 'Sample Title F'
+  , 'description': 'Sample description for this note.'
+  , 'userid': '0001'
+  , 'text':'This is a sample note text.'
+  , 'type':'text'
 },
 {
-		'title': 'Sample Title G'
-	,	'description': 'Sample description for this note.'
-	,	'userid': '0001'
-	,	'text':'This is a sample note text.'
-	,	'type':'text'
+    'title': 'Sample Title G'
+  , 'description': 'Sample description for this note.'
+  , 'userid': '0001'
+  , 'text':'This is a sample note text.'
+  , 'type':'text'
 },
 {
-		'title': 'Sample Title H'
-	,	'description': 'Sample description for this note.'
-	,	'userid': '0001'
-	,	'text':'This is a sample note text.'
-	,	'type':'text'
+    'title': 'Sample Title H'
+  , 'description': 'Sample description for this note.'
+  , 'userid': '0001'
+  , 'text':'This is a sample note text.'
+  , 'type':'text'
 },
 {
-		'title': 'Sample Title I'
-	,	'description': 'Sample description for this note.'
-	,	'userid': '0001'
-	,	'text':'This is a sample note text.'
-	,	'type':'text'
+    'title': 'Sample Title I'
+  , 'description': 'Sample description for this note.'
+  , 'userid': '0001'
+  , 'text':'This is a sample note text.'
+  , 'type':'text'
 }]";
-
-return $sampleNotes;
+    
+    return $sampleNotes;
 }

@@ -4,6 +4,7 @@ notesApp.Models = notesApp.Models || {};
     'use strict';
     notesApp.Models.Note = Backbone.Model.extend({
         urlRoot: 'api/notes',
+        idAttribute: '_id',     // Mongo id attribute
         initialize: function() {
             console.log('Notes Model :: Init', this.url);
         },
