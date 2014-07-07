@@ -5,7 +5,6 @@ notesApp.Views = notesApp.Views || {};
     notesApp.Views.Notes = Backbone.View.extend({
         el:$('.main'),
         template: JST['app/scripts/templates/notes.ejs'],
-        tagName: 'div',
         initialize: function() {
             console.log('Notes View :: Init');
             var self = this;
@@ -15,6 +14,11 @@ notesApp.Views = notesApp.Views || {};
                 console.log('initialize fetch finished');
                self.render();
             });
+            this.$input = this.$('#new-note');
+            this.$list = this.$('.notes-list');
+        },
+        events:{
+            'keypress #new-note': 'createOnEnter'
         },
         render: function() {
             console.log('Notes View::Render');
@@ -28,11 +32,24 @@ notesApp.Views = notesApp.Views || {};
             return this;
         },
         renderNote: function(note) {
-            console.log('Notes View::RenderNote');
+            console.log('Notes View::RenderNote',this.$list);
             var noteView = new notesApp.Views.Note({
                 model: note
             });
-            this.$el.append(noteView.render().el);
+            this.$('.notes-list').append(noteView.render().el);
+        },
+        // Generate the attributes for a new note item.
+        newAttributes: function () {
+            return {
+                title: this.$input.val().trim()
+            };
+        },
+        createOnEnter:function(e){
+            // New model, and save.
+            if (e.which === ENTER_KEY && this.$input.val().trim()) {
+                console.log('Save new note');
+               //this.$input.val('');
+            }
         }
     });
 })();

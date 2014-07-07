@@ -104,7 +104,7 @@ function mongoList($server, $db, $collection, $select = null) {
 
     $conn->close();
     
-    return $output;
+    return $output['results'];
     
   } catch (MongoConnectionException $e) {
     die('Error connecting to MongoDB server');

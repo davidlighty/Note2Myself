@@ -1,27 +1,27 @@
 /*global notesApp, Backbone, JST*/
-
 notesApp.Views = notesApp.Views || {};
-
-(function () {
+(function() {
     'use strict';
-
     notesApp.Views.Note = Backbone.View.extend({
-       // el:$('.notes-list'),
-        template: JST['app/scripts/templates/note.ejs'],
         tagName: 'li',
-        id: '',
+        template: JST['app/scripts/templates/note.ejs'],
         className: 'note-item',
-        events: {},
-        initialize: function () {
+        initialize: function() {
             console.log('Note View :: Init');
             this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
         },
-        render: function () {
+        events: {
+            'click .delete-note': 'clear'
+        },
+        render: function() {
+            console.log('this.$el', this.$el);
             this.$el.html(this.template(this.model.toJSON()));
-            console.log('el',this.el);
             return this;
+        },
+        clear: function() {
+            console.log('delete note', this.model.toJSON());
+            this.model.destroy(); // Calls the API delete.
         }
-
     });
-
 })();

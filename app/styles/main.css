@@ -34,7 +34,7 @@ ul {
     margin: 2px;
     font-size: 120%;
 }
-.note-item > div {
+.note-item > section {
     padding: 8px;
     margin: 7px;
     margin-bottom: 15px;
@@ -49,7 +49,7 @@ ul {
     font-style: italic;
     margin-left: 2px;
 }
-.note-item > div small {
+.note-item > section small {
     display: inline-block;
 }
 .note-link {

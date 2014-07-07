@@ -22,21 +22,78 @@ $app = new Slim(array(
 	'debug' => true,
     'mode' => 'development'
 ));
+$log = $app->getLog();
 
 // Set up DB Mongo connection
 define('MONGO_HOST', '127.0.0.1');
 define('DB', 'noteApp');
 
+// route middleware for simple API authentication
+function authenticate(\Slim\Route $route) {
+    $app = \Slim\Slim::getInstance();
+    if (validateUserKey() === false) {
+      $app->halt(401);
+    }
+}
+
+function validateUserKey($uid, $key) {
+  // insert your (hopefully complex) validation routine here
+  return false;
+}
 
 $app->get('/',function(){
-	echo "API Start Page";
+	echo "Notes API";
 });
 
+// Main API Methods
+
+// Notes GET Routes
+
+/**
+* Get notes
+* @api
+*/
 $app->get('/notes','_list');
 
-// $app->get('/notes/:id', authorize('user'),	'getNote');
-// $app->get('/notes/search/:query', authorize('user'), 'getNotesByName');
-// $app->get('/notes/modifiedsince/:timestamp', authorize('user'), 'findByModifiedDate');
+/**
+* Get a specific note by user
+* Must be authorized first
+* @param string id
+* @api
+*/
+$app->get('/notes/:id','authenticate','_read');
+
+/**
+* Find notes with this query term
+* @api
+*/
+//$app->get('/notes/search/:query', 'authenticate', 'getNotesByName');
+
+/**
+* Find notes from a specific timestamp
+* @api
+*/
+//$app->get('/notes/modifiedsince/:timestamp', 'authenticate', 'findByModifiedDate');
+
+/**
+* Create a note
+* @api
+*/
+$app->post('/notes/','authenticate','_create');
+
+/**
+* Update a note
+* @param string id
+* @api
+*/
+$app->put('/notes/:id','authenticate','_update');
+
+/**
+* Delete a note
+* @param string id
+* @api
+*/
+$app->delete('/notes/:id','authenticate','_delete');
 
 // // I add the login route as a post, since we will be posting the login form info
 // $app->post('/login', 'login');
@@ -61,6 +118,63 @@ function _list(){
     'notes',
     $select
   );
+  echo json_encode($data);
+
+}
+
+// Create
+function _create(){
+
+  $document = json_decode(Slim::getInstance()->request()->getBody(), true);
+
+  $data = mongoCreate(
+    MONGO_HOST, 
+    DB, 
+    'notes',
+    $document
+  ); 
+  echo json_encode($data);
+  
+}
+
+// Read
+function _read($id){
+
+  $data = mongoRead(
+    MONGO_HOST,
+    DB,
+    'notes',
+    $id
+  );
+  echo json_encode($data);
+
+}
+
+// Update 
+function _update($id){
+
+  $document = json_decode(Slim::getInstance()->request()->getBody(), true);
+
+  $data = mongoUpdate(
+    MONGO_HOST, 
+    DB, 
+    'notes', 
+    $id,
+    $document
+  ); 
+  echo json_encode($data);
+  
+}
+
+// Delete
+function _delete($id){
+
+  $data = mongoDelete(
+    MONGO_HOST, 
+    DB, 
+    'notes', 
+    $id
+  ); 
   echo json_encode($data);
 
 }
