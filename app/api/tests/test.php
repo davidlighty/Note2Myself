@@ -24,7 +24,7 @@ class mongoTests extends \PHPUnit_Framework_TestCase {
   	///////////// TESTS ////////////////
 
 	public function testCanConnect(){
-		  $this->assertNotNull($this->db);
+		  $this->assertNull($this->db);  // Failing test
 	}
 
 	public function testCanCreate(){
