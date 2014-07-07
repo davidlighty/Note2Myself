@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="app/api/tests/test.php" colors="true">
+<phpunit colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+>
     <testsuites>
         <testsuite name="Basic Test Suite">
             <directory>./app/api/tests/</directory>
