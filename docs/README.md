@@ -46,3 +46,9 @@ This is a continous build tool that works on commits into a public github reposi
 
 Very useful tool that helps test with support for modules and dependencies.
 > Additional Information: http://docs.travis-ci.com/user/languages/php/
+
+
+#### PHPUnit
+> http://phpunit.de/getting-started.html
+
+Test suite for code coverage.  Meant for class method testing...
