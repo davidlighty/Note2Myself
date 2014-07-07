@@ -7,7 +7,7 @@
 >
     <testsuites>
         <testsuite name="Basic Test Suite">
-            <directory>./app/api/tests/</directory>
+            <directory>/app/api/tests/</directory>
         </testsuite>
     </testsuites>
 
