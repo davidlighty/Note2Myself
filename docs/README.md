@@ -32,7 +32,15 @@ Create a "twitter" -esque steaming notes system.  This is an API system, which a
 #### phpDocumentor
 > http://www.phpdoc.org/
 
-Useful tool to take docblocks in code and auto-create documentation!
+Useful tool to take docblocks in code and auto-create documentation!  I found due to differing workstations that the phar usage was quick and painless.
+
+##### Using the phar to generate docs
+1. Download and save php + phar.
+2. Goto repository
+3. Craft php command to run
+> repo\path$> path\php path\phpDoc.phar -d path\to\scan (usually .) -t docs/togenerate/path
+4. Load the site and read the docs
+5. Repeat after updating (push into a build & test script)
 
 
 #### TravisCI
