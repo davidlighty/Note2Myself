@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'../mongo/crud.php';
+require_once dirname(__FILE__).'/../mongo/crud.php';
 
 class mongoTests extends PHPUnit_Framework_TestCase {
 
