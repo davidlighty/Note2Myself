@@ -5,4 +5,4 @@ php:
 before_script: phpenv config-add myconfig.ini
 script: 
 - mkdir -p build
-- phpunit --configuration phpunit.xml
+- phpunit app/api/tests/test.php

@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__).'/../mongo/crud.php';
 
-class mongoTests extends \PHPUnit_Framework_TestCase {
+class MongoTests extends PHPUnit_Framework_TestCase {
 
 	private $db;
 	private $collection;
