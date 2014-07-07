@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="api/tests/test.php" colors="true">
+<phpunit bootstrap="app/api/tests/test.php" colors="true">
     <testsuites>
         <testsuite name="Basic Test Suite">
             <directory>.api/tests/</directory>
