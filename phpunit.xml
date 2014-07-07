@@ -3,7 +3,7 @@
 <phpunit bootstrap="app/api/tests/test.php" colors="true">
     <testsuites>
         <testsuite name="Basic Test Suite">
-            <directory>.api/tests/</directory>
+            <directory>./app/api/tests/</directory>
         </testsuite>
     </testsuites>
 
