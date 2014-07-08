@@ -50,6 +50,7 @@ class MongoTests extends PHPUnit_Framework_TestCase {
             }");
             
 		// Act
+		var_dump($doc);
         $resp = mongoCreate("noteApp","notes", $doc);
 
 		// Assert
