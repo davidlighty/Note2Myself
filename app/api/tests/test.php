@@ -47,7 +47,7 @@ class MongoTests extends PHPUnit_Framework_TestCase {
             }";
             
 		// Act
-        $resp = mongoCreate("noteApp","notes", $doc);
+        $resp = mongoCreate("noteApp","notes", $doc); // json_decode()
 
 		// Assert
         $this->assertNotNull($resp);
