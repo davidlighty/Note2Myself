@@ -11,11 +11,11 @@
  * Create (insert)
  */
 
-function mongoCreate($server, $db, $collection, $document) {
+function mongoCreate($db, $collection, $document) {
 
   try {
   
-    $conn = new Mongo($server);
+    $conn = new MongoClient();
     $_db = $conn->{$db};
     $collection = $_db->{$collection};
     $collection->insert($document);
