@@ -24,7 +24,7 @@ class MongoTests extends PHPUnit_Framework_TestCase {
   	///////////// TESTS ////////////////
 
 	public function testCanConnect(){
-		  $this->assertNotNull($this->db);
+		  $this->assertNull($this->db);
 	}
 	
 	/**
