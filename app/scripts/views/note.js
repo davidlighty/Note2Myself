@@ -10,6 +10,7 @@ notesApp.Views = notesApp.Views || {};
             console.log('Note View :: Init');
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
+            this.listenTo(this.model, 'error', this.handleError);
         },
         events: {
             'click .delete-note': 'clear'
@@ -21,7 +22,13 @@ notesApp.Views = notesApp.Views || {};
         },
         clear: function() {
             console.log('delete note', this.model.toJSON());
-            this.model.destroy();
+            this.model.destroy({
+                wait:true
+            });
+        },
+        handleError:function(){
+            console.log('Error!');
+            this.$el.addClass('alert-warning');
         }
     });
 })();

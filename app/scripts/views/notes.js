@@ -24,7 +24,7 @@ notesApp.Views = notesApp.Views || {};
             console.log(this.collection.models);
             this.$el.html(this.template());
             this.$input = this.$('#new-note');
-            this.$list = this.$('.notes-list');
+            this.$list = this.$('#notes-list');
             _.each(this.collection.models, function(note) {
                 // console.log('note::' + note.toJSON());
                 self.renderNote(note);
@@ -36,7 +36,7 @@ notesApp.Views = notesApp.Views || {};
             var noteView = new notesApp.Views.Note({
                 model: note
             });
-            this.$('.notes-list').append(noteView.render().el);
+            this.$list.append(noteView.render().el);
         },
         // Generate the attributes for a new note item.
         newAttributes: function() {

@@ -4,9 +4,6 @@ require_once dirname(__FILE__).'/../mongo/crud.php';
 
 class MongoTests extends PHPUnit_Framework_TestCase {
 
-	define('MONGO_HOST', '127.0.0.1');
-	define('DB', 'noteApp');
-
 	private $db;
 	private $collection;
 
