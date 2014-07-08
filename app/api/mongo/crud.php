@@ -10,7 +10,6 @@
 /**
  * Create (insert)
  */
-
 function mongoCreate($db, $collection, $document) {
 
   try {
@@ -36,7 +35,6 @@ function mongoCreate($db, $collection, $document) {
 /**
  * Read (findOne)
  */
-
 function mongoRead($server, $db, $collection, $id) {
   
   try {
@@ -68,7 +66,6 @@ function mongoRead($server, $db, $collection, $id) {
 /**
  * Update (set properties)
  */
-
 function mongoUpdate($server, $db, $collection, $id, $document) {
 
   try {
@@ -104,7 +101,6 @@ function mongoUpdate($server, $db, $collection, $id, $document) {
 /**
  * Delete (remove)
  */
-
 function mongoDelete($server, $db, $collection, $id) {
 
   try {
