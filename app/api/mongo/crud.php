@@ -13,7 +13,6 @@
 function mongoCreate($db, $collection, $document) {
 
   try {
-  
     $conn = new MongoClient();
     $_db = $conn->{$db};
     $collection = $_db->{$collection};

@@ -13,12 +13,19 @@ notesApp.Views = notesApp.Views || {};
             this.listenTo(this.model, 'error', this.handleError);
         },
         events: {
-            'click .delete-note': 'clear'
+            'click .update-note':'save',
+            'click .delete-note':'clear'
         },
         render: function() {
             console.log('this.$el', this.$el);
             this.$el.html(this.template(this.model.toJSON()));
             return this;
+        },
+        save:function(){
+            console.log('save note');
+            this.model.save({
+                wait:true
+            });
         },
         clear: function() {
             console.log('delete note', this.model.toJSON());
