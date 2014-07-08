@@ -31,7 +31,7 @@ class MongoTests extends PHPUnit_Framework_TestCase {
      * @expectedException MongoException
      */
 	public function testCatchMongoConnectionException(){
-	    mongoCreate($server, $db, $collection, $document);
+	    mongoCreate("127.0.0.2", "noteApp", "notes", null);
 	}
 
 	public function testCanCreate(){
