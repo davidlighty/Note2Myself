@@ -4,6 +4,9 @@ require_once dirname(__FILE__).'/../mongo/crud.php';
 
 class MongoTests extends PHPUnit_Framework_TestCase {
 
+	define('MONGO_HOST', '127.0.0.1');
+	define('DB', 'noteApp');
+
 	private $db;
 	private $collection;
 
@@ -47,7 +50,7 @@ class MongoTests extends PHPUnit_Framework_TestCase {
             }");
             
 		// Act
-        $resp = mongoCreate("noteApp","notes", $doc); // json_decode()
+        $resp = mongoCreate("noteApp","notes", $doc);
 
 		// Assert
         $this->assertNotNull($resp);
