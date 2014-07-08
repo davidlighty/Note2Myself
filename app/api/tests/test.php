@@ -38,10 +38,19 @@ class MongoTests extends PHPUnit_Framework_TestCase {
 
 	public function testCanCreate(){
 		// Arrange
-
+        $doc = "{
+                'title': 'Sample Title G'
+              , 'description': 'Sample description for this note.'
+              , 'userid': '0001'
+              , 'text':'This is a sample note text.'
+              , 'type':'text'
+            }";
+            
 		// Act
+        $resp = mongoCreate("noteApp","notes", $doc);
 
 		// Assert
+        $this->assertNotNull($resp);
 
 	}
 
