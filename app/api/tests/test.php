@@ -38,7 +38,7 @@ class MongoTests extends PHPUnit_Framework_TestCase {
 
 	public function testCanCreate(){
 		// Arrange
-        $doc = json_decode('{"title": "Sample Title G"}');
+        $doc = json_decode('{"title": "Sample Title G"}',true);
             
 		// Act
         $resp = mongoCreate("noteApp","notes",  $doc);
