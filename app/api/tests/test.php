@@ -24,7 +24,7 @@ class MongoTests extends PHPUnit_Framework_TestCase {
   	///////////// TESTS ////////////////
 
 	public function testCanConnect(){
-		  $this->assertNull($this->db);
+		  $this->assertNotNull($this->db);
 	}
 	
 	/**
@@ -38,13 +38,13 @@ class MongoTests extends PHPUnit_Framework_TestCase {
 
 	public function testCanCreate(){
 		// Arrange
-        $doc = "{
+        $doc = json_decode("{
                 'title': 'Sample Title G'
               , 'description': 'Sample description for this note.'
               , 'userid': '0001'
               , 'text':'This is a sample note text.'
               , 'type':'text'
-            }";
+            }");
             
 		// Act
         $resp = mongoCreate("noteApp","notes", $doc); // json_decode()
