@@ -14,6 +14,7 @@ notesApp.Views = notesApp.Views || {};
                 console.log('initialize fetch finished');
                 self.render();
             });
+            this.listenTo(this.collection,'error',this.errorHandler);
         },
         events: {
             'keypress #new-note': 'createOnEnter'
@@ -50,6 +51,11 @@ notesApp.Views = notesApp.Views || {};
                 console.log('Save new note');
                 //this.$input.val('');
             }
+        },
+        errorHandler:function(model,error){
+            console.log('Error in Collection',error);
+            // Show error in footer "message" area.
+            notesApp.vent.trigger('error:event',error);
         }
     });
 })();

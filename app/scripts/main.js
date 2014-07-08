@@ -9,9 +9,13 @@ window.notesApp = {
     init: function() {
         'use strict';
         console.log('Notes App Init');
+        // Init a main event obj
+        this.vent = _.extend({}, Backbone.Events);
         // Init the main notes view
         var notesView = new notesApp.Views.Notes();
         console.log('notesView', notesView);
+        var alertView = new notesApp.Views.Alert();
+        console.log('alertView',alertView);
     }
 };
 $(document).ready(function() {
