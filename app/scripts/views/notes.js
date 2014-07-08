@@ -14,17 +14,18 @@ notesApp.Views = notesApp.Views || {};
                 console.log('initialize fetch finished');
                 self.render();
             });
-            this.listenTo(this.collection,'error',this.errorHandler);
+            this.listenTo(this.collection, 'error', this.errorHandler);
         },
         events: {
-            'keypress #new-note': 'createOnEnter'
+            'keypress #new-note-text': 'createOnEnter',
+            'click #save-new-note': 'create'
         },
         render: function() {
             console.log('Notes View::Render');
             var self = this;
             console.log(this.collection.models);
             this.$el.html(this.template());
-            this.$input = this.$('#new-note');
+            this.$input = this.$('#new-note-text');
             this.$list = this.$('#notes-list');
             _.each(this.collection.models, function(note) {
                 // console.log('note::' + note.toJSON());
@@ -45,17 +46,25 @@ notesApp.Views = notesApp.Views || {};
                 title: this.$input.val().trim()
             };
         },
+        create: function() {
+            console.log('Save new note');
+            // Move into model
+            var newNote = {};
+            newNote.title = this.$('#new-note-title').val().trim();
+            newNote.text = this.$('#new-note-text').val().trim();
+            console.log('newNote', newNote);
+        },
         createOnEnter: function(e) {
             // New model, and save.
             if (e.which === ENTER_KEY && this.$input.val().trim()) {
                 console.log('Save new note');
-                //this.$input.val('');
+                this.create();
             }
         },
-        errorHandler:function(model,error){
-            console.log('Error in Collection',error);
+        errorHandler: function(model, error) {
+            console.log('Error in Collection', error);
             // Show error in footer "message" area.
-            notesApp.vent.trigger('error:event',error);
+            notesApp.vent.trigger('error:event', error);
         }
     });
 })();
