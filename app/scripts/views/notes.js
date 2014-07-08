@@ -40,19 +40,24 @@ notesApp.Views = notesApp.Views || {};
             });
             this.$list.append(noteView.render().el);
         },
-        // Generate the attributes for a new note item.
-        newAttributes: function() {
+        newAttributes:function(){
             return {
-                title: this.$input.val().trim()
-            };
+                    "title":  this.$('#new-note-title').val().trim()
+                  , "description": ""
+                  , "userid": "0001"
+                  , "text": this.$('#new-note-text').val().trim()
+                  , "type": "text"
+                  , "created" : Date()
+
+            }
+        },
+        clearAttributes:function(){
+            this.$('#new-note-title').val('');
+            this.$('#new-note-text').val('');
         },
         create: function() {
             console.log('Save new note');
-            // Move into model
-            var newNote = {};
-            newNote.title = this.$('#new-note-title').val().trim();
-            newNote.text = this.$('#new-note-text').val().trim();
-            console.log('newNote', newNote);
+            this.collection.create(this.newAttributes());
         },
         createOnEnter: function(e) {
             // New model, and save.
