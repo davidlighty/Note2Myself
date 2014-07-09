@@ -1,259 +1,108 @@
 <?php
-/**
-*
-*    Notes API using Slim Framework
-*    David Lighty 2014
-*    Comp 2052
-*
-*    http://docs.slimframework.com/
-*
-*/
 
-session_start();
+  require 'Slim/Slim/Slim.php';
+  require 'mongo/mongoLayer.php';
 
-require 'Slim/Slim.php';
-require 'mongo/crud.php';
-require 'mongo/list.php';
-require 'mongo/command.php';
+  /**
+  * Create API App
+  */
+  $app = new Slim();
 
-use Slim\Slim;
-Slim::registerAutoloader();
+  /**
+   * Routing
+   */
+  $app->get(    '/api/:collection',      '_list');
+  $app->post(   '/api/:collection',      '_create');
+  $app->get(    '/api/:collection/:id',  '_read');
+  $app->put(    '/api/:collection/:id',  '_update');
+  $app->delete( '/api/:collection/:id',  '_delete');
 
-$app = new Slim(array('debug' => true, 'mode' => 'development'));
-$log = $app->getLog();
-
-// Set up DB Mongo connection
-define('MONGO_HOST', '127.0.0.1');
-define('DB', 'noteApp');
-
-/**
-* route middleware for simple API authentication
-*/ 
-function authenticate(\Slim\Route $route) {
-    $app = \Slim\Slim::getInstance();
-    $uid = $app->getEncryptedCookie('uid');
-    $key = $app->getEncryptedCookie('key');
-    if (validateUserKey($uid, $key) === false) {
-        $app->halt(401);
-    }
-}
-
-/**
-* Validate the user token
-*/ 
-function validateUserKey($uid, $key) {
+  /**
+  * List
+  *
+  * Get a list of documents from the mongo db
+  */
+  function _list($db, $collection){
     
-    // insert your (hopefully complex) validation routine here
-    return false;
-}
-
-/**
-* $app->get
-*
-* Main get route
-*
-* @api
-*/ 
-$app->get('/', function () {
-    echo "Notes API";
-});
-
-// Main API Methods
-
-/**
-* Get Notes
-*
-* Respond to a get request with all available notes
-*
-* @api
-*/
-$app->get('/notes', '_list');
-
-/**
- * Get a specific note by user
- * Must be authorized first
- * @param string id
- * @api
- */
-$app->get('/notes/:id', 'authenticate', '_read');
-
-/**
- * Find notes with this query term
- * @api
- */
-
-//$app->get('/notes/search/:query', 'authenticate', 'getNotesByName');
-
-
-
-/**
- * Find notes from a specific timestamp
- * @api
- */
-
-//$app->get('/notes/modifiedsince/:timestamp', 'authenticate', 'findByModifiedDate');
-
-
-
-/**
- * Create a note
- * @api
- */
-$app->post('/notes/', 'authenticate', '_create');
-
-/**
- * Update a note
- * @param string id
- * @api
- */
-$app->put('/notes/:id', 'authenticate', '_update');
-
-/**
- * Delete a note
- *
- * @param string id
- * @api
- */
-$app->delete('/notes/:id', 'authenticate', '_delete');
-
-// // I add the login route as a post, since we will be posting the login form info
-// $app->post('/login', 'login');
-
-$app->run();
-
-// api/index.php
-
-/**
-* _list
-*
-* Get list of notes
-*/
-function _list() {
+    $select = array(
+      'limit' =>    (isset($_GET['limit']))   ? $_GET['limit'] : false, 
+      'page' =>     (isset($_GET['page']))    ? $_GET['page'] : false,
+      'filter' =>   (isset($_GET['filter']))  ? $_GET['filter'] : false,
+      'regex' =>    (isset($_GET['regex']))   ? $_GET['regex'] : false,
+      'sort' =>     (isset($_GET['sort']))    ? $_GET['sort'] : false
+    );
     
-    $select = array('limit' => (isset($_GET['limit'])) ? $_GET['limit'] : false, 'page' => (isset($_GET['page'])) ? $_GET['page'] : false, 'filter' => (isset($_GET['filter'])) ? $_GET['filter'] : false, 'regex' => (isset($_GET['regex'])) ? $_GET['regex'] : false, 'sort' => (isset($_GET['sort'])) ? $_GET['sort'] : false);
-    
-    $data = mongoList(MONGO_HOST, DB, 'notes', $select);
+    $data = MongoLayer::list( 
+      $collection,
+      $select
+    );
+    header("Content-Type: application/json");
     echo json_encode($data);
-}
+    exit;
+  }
 
-/**
-* _create
-*
-* Add a note to the collection
-*/
-function _create() {
-    
+  // Create
+  function _create($db, $collection){
+
     $document = json_decode(Slim::getInstance()->request()->getBody(), true);
-    
-    $data = mongoCreate(MONGO_HOST, DB, 'notes', $document);
-    echo json_encode($data);
-}
 
-/**
-* _read
-*
-* Get note by ID
-*/
-function _read($id) {
-    
-    $data = mongoRead(MONGO_HOST, DB, 'notes', $id);
+    $data = mongoCreate(
+      MONGO_HOST, 
+      $db, 
+      $collection, 
+      $document
+    ); 
+    header("Content-Type: application/json");
     echo json_encode($data);
-}
+    exit;
+  }
 
-/**
-* _update
-*
-* Update a note
-*/
-function _update($id) {
-    
+  // Read
+  function _read($db, $collection, $id){
+
+    $data = mongoRead(
+      MONGO_HOST,
+      $db,
+      $collection,
+      $id
+    );
+    header("Content-Type: application/json");
+    echo json_encode($data);
+    exit;
+  }
+
+  // Update 
+  function _update($db, $collection, $id){
+
     $document = json_decode(Slim::getInstance()->request()->getBody(), true);
-    
-    $data = mongoUpdate(MONGO_HOST, DB, 'notes', $id, $document);
-    echo json_encode($data);
-}
 
-/**
-* _delete
-*
-* Remove a note
-*/
-function _delete() {
-    $document = json_decode(Slim::getInstance()->request()->getBody(), true);
-    $id = $document['id'];
-    $data = mongoDelete(MONGO_HOST, DB, 'notes', $id);
+    $data = mongoUpdate(
+      MONGO_HOST, 
+      $db, 
+      $collection, 
+      $id,
+      $document
+    ); 
+    header("Content-Type: application/json");
     echo json_encode($data);
-}
+    exit;
+  }
 
-/**
-* getNotes
-*
-* dummy json data block
-*/
-function getNotes() {
-    $sampleNotes = "[{
-    'title': 'Sample Title A'
-  , 'description': 'Sample description for this note.'
-  , 'userid': '0001'
-  , 'text':'This is a sample note text.'
-  , 'type':'text'
-},
-{
-    'title': 'Sample Title B'
-  , 'description': 'Sample description for this note.'
-  , 'userid': '0001'
-  , 'text':'This is a sample note text.'
-  , 'type':'text'
-},
-{
-    'title': 'Sample Title C'
-  , 'description': 'Sample description for this note.'
-  , 'userid': '0001'
-  , 'text':'This is a sample note text.'
-  , 'type':'text'
-},
-{
-    'title': 'Sample Title D'
-  , 'description': 'Sample description for this note.'
-  , 'userid': '0001'
-  , 'text':'This is a sample note text.'
-  , 'type':'text'
-},
-{
-    'title': 'Sample Title E'
-  , 'description': 'Sample description for this note.'
-  , 'userid': '0001'
-  , 'text':'This is a sample note text.'
-  , 'type':'text'
-},
-{
-    'title': 'Sample Title F'
-  , 'description': 'Sample description for this note.'
-  , 'userid': '0001'
-  , 'text':'This is a sample note text.'
-  , 'type':'text'
-},
-{
-    'title': 'Sample Title G'
-  , 'description': 'Sample description for this note.'
-  , 'userid': '0001'
-  , 'text':'This is a sample note text.'
-  , 'type':'text'
-},
-{
-    'title': 'Sample Title H'
-  , 'description': 'Sample description for this note.'
-  , 'userid': '0001'
-  , 'text':'This is a sample note text.'
-  , 'type':'text'
-},
-{
-    'title': 'Sample Title I'
-  , 'description': 'Sample description for this note.'
-  , 'userid': '0001'
-  , 'text':'This is a sample note text.'
-  , 'type':'text'
-}]";
-    
-    return $sampleNotes;
-}
+  // Delete
+  function _delete($db, $collection, $id){
+
+    $data = mongoDelete(
+      MONGO_HOST, 
+      $db, 
+      $collection, 
+      $id
+    ); 
+    header("Content-Type: application/json");
+    echo json_encode($data);
+    exit;
+  }
+
+  /**
+  * Start Api app
+  */
+  $app->run();

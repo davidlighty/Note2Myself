@@ -40,24 +40,27 @@ notesApp.Views = notesApp.Views || {};
             });
             this.$list.append(noteView.render().el);
         },
-        newAttributes:function(){
+        newAttributes: function() {
             return {
-                    "title":  this.$('#new-note-title').val().trim()
-                  , "description": ""
-                  , "userid": "0001"
-                  , "text": this.$('#new-note-text').val().trim()
-                  , "type": "text"
-                  , "created" : Date()
-
+                "title": this.$('#new-note-title').val().trim(),
+                "description": "",
+                "userid": "0001",
+                "text": this.$('#new-note-text').val().trim(),
+                "type": "text",
+                "created": Date()
             }
         },
-        clearAttributes:function(){
+        clearAttributes: function() {
             this.$('#new-note-title').val('');
             this.$('#new-note-text').val('');
         },
         create: function() {
-            console.log('Save new note');
-            this.collection.create(this.newAttributes());
+            // Must have at least some text.
+            if (this.$('#new-note-text').val().trim()) {
+                console.log('Save new note');
+                this.collection.create(this.newAttributes());
+                this.clearAttributes();
+            }
         },
         createOnEnter: function(e) {
             // New model, and save.

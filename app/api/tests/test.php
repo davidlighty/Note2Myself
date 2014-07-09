@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/../mongo/crud.php';
+require_once dirname(__FILE__).'/../mongo/mongoLayer.php';
 
 class MongoTests extends PHPUnit_Framework_TestCase {
 
@@ -27,15 +27,6 @@ class MongoTests extends PHPUnit_Framework_TestCase {
 		  $this->assertNotNull($this->db);
 	}
 	
-	/**
-     * @expectedException MongoException
-     */
-	public function testCatchMongoConnectionException(){
-	        $conn = new MongoClient("mongodb://localhost:27018"); // bad port
-		    $this->db = $conn->{'noteApp'};
-		    $this->collection = $this->db->{'notes'};
-	}
-
 	public function testCanCreate(){
 		// Arrange
         $doc = json_decode('{"title": "Sample Title G"}',true);
