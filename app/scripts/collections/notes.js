@@ -9,4 +9,6 @@ notesApp.Collections = notesApp.Collections || {};
             return response.results;
         }
     });
+
+    notesApp.notes = new notesApp.Collections.Notes();
 })();

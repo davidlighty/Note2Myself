@@ -8,13 +8,15 @@ notesApp.Views = notesApp.Views || {};
         initialize: function() {
             console.log('Notes View :: Init');
             var self = this;
-            this.collection = new notesApp.Collections.Notes();
             // Don't call render until our xhr is finished
-            this.collection.fetch().done(function() {
+            notesApp.notes.fetch({
+                add: true
+            }).done(function() {
                 console.log('initialize fetch finished');
                 self.render();
             });
-            this.listenTo(this.collection, 'error', this.errorHandler);
+            this.listenTo(notesApp.notes, 'error', this.errorHandler);
+            this.listenTo(notesApp.notes, 'add', this.render);
         },
         events: {
             'keypress #new-note-text': 'createOnEnter',
@@ -23,11 +25,11 @@ notesApp.Views = notesApp.Views || {};
         render: function() {
             console.log('Notes View::Render');
             var self = this;
-            console.log(this.collection.models);
+            console.log(notesApp.notes.models);
             this.$el.html(this.template());
             this.$input = this.$('#new-note-text');
             this.$list = this.$('#notes-list');
-            _.each(this.collection.models, function(note) {
+            _.each(notesApp.notes.models, function(note) {
                 // console.log('note::' + note.toJSON());
                 self.renderNote(note);
             }, this);
@@ -58,7 +60,7 @@ notesApp.Views = notesApp.Views || {};
             // Must have at least some text.
             if (this.$('#new-note-text').val().trim()) {
                 console.log('Save new note');
-                this.collection.create(this.newAttributes());
+                notesApp.notes.create(this.newAttributes());
                 this.clearAttributes();
             }
         },
