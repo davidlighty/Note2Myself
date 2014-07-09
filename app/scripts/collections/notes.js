@@ -4,6 +4,9 @@ notesApp.Collections = notesApp.Collections || {};
     'use strict';
     notesApp.Collections.Notes = Backbone.Collection.extend({
         model: notesApp.Models.Note,
-        url: 'api/notes'
+        url: 'api/notes',
+        parse: function(response) {
+            return response.results;
+        }
     });
 })();

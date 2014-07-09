@@ -8,10 +8,12 @@
  */
 class MongoLayer {
 
-	define('DB_NAME', 'notesApp');
+	// DB Constants
+	const DB_NAME = 'notesApp';
 
-	define('MONGO_LIST_DEFAULT_PAGE_SIZE', 500);
-	define('MONGO_LIST_MAX_PAGE_SIZE', false);// set to a number to enforce a max page size
+	// List Sort Constants
+	const MONGO_LIST_DEFAULT_PAGE_SIZE = 500;
+	const MONGO_LIST_MAX_PAGE_SIZE     = false;// set to a number to enforce a max page size
 
 	private function __construct() {}
 
@@ -30,7 +32,7 @@ class MongoLayer {
 		try {
 
 			$conn       = new MongoClient();
-			$_db        = $conn->{DB_NAME};
+			$_db        = $conn->{self::DB_NAME};
 			$collection = $_db->{ $collection};
 			$collection->insert($document);
 			$conn->close();
@@ -55,7 +57,7 @@ class MongoLayer {
 		try {
 
 			$conn       = new MongoClient();
-			$_db        = $conn->{DB_NAME};
+			$_db        = $conn->{self::DB_NAME};
 			$collection = $_db->{ $collection};
 
 			$criteria = array(
@@ -85,7 +87,7 @@ class MongoLayer {
 		try {
 
 			$conn       = new MongoClient();
-			$_db        = $conn->{DB_NAME};
+			$_db        = $conn->{self::DB_NAME};
 			$collection = $_db->{ $collection};
 
 			$criteria = array(
@@ -118,7 +120,7 @@ class MongoLayer {
 		try {
 
 			$conn       = new MongoClient();
-			$_db        = $conn->{DB_NAME};
+			$_db        = $conn->{self::DB_NAME};
 			$collection = $_db->{ $collection};
 
 			$criteria = array(
@@ -152,7 +154,7 @@ class MongoLayer {
 		try {
 
 			$conn       = new MongoClient();
-			$_db        = $conn->{DB_NAME};
+			$_db        = $conn->{self::DB_NAME};
 			$collection = $_db->{ $collection};
 
 			if ($query) {
@@ -186,12 +188,12 @@ class MongoLayer {
 	 *    )
 	 *  );
 	 */
-	public static function list($collection, $select = null) {
+	public static function getList($collection, $select = null) {
 
 		try {
 
 			$conn       = new MongoClient();
-			$_db        = $conn->{DB_NAME};
+			$_db        = $conn->{self::DB_NAME};
 			$collection = $_db->{ $collection};
 
 			$criteria = NULL;
@@ -232,13 +234,13 @@ class MongoLayer {
 			// set a limit
 
 			if (isset($select['limit']) && $select['limit']) {
-				if (MONGO_LIST_MAX_PAGE_SIZE && $select['limit'] > MONGO_LIST_MAX_PAGE_SIZE) {
-					$limit = MONGO_LIST_MAX_PAGE_SIZE;
+				if (self::MONGO_LIST_MAX_PAGE_SIZE && $select['limit'] > self::MONGO_LIST_MAX_PAGE_SIZE) {
+					$limit = self::MONGO_LIST_MAX_PAGE_SIZE;
 				} else {
 					$limit = $select['limit'];
 				}
 			} else {
-				$limit = MONGO_LIST_DEFAULT_PAGE_SIZE;
+				$limit = self::MONGO_LIST_DEFAULT_PAGE_SIZE;
 			}
 
 			if ($limit) {

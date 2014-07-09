@@ -30,11 +30,11 @@ $app = new Slim();
  * Those routes that require authentication add the 'authenticate' as a middleware option
  *   ==>  (route,middleware,function)
  */
-$app->get('/api/:collection', 'authenticate', '_list');
-$app->post('/api/:collection', 'authenticate', '_create');
-$app->get('/api/:collection/:id', 'authenticate', '_read');
-$app->put('/api/:collection/:id', 'authenticate', '_update');
-$app->delete('/api/:collection/:id', 'authenticate', '_delete');
+$app->get('/:collection', 'authenticate', '_list');
+$app->post('/:collection', 'authenticate', '_create');
+$app->get('/:collection/:id', 'authenticate', '_read');
+$app->put('/:collection/:id', 'authenticate', '_update');
+$app->delete('/:collection/:id', 'authenticate', '_delete');
 
 /**
  * _list
@@ -42,7 +42,7 @@ $app->delete('/api/:collection/:id', 'authenticate', '_delete');
  * Get a list of documents from the mongo db
  */
 
-function _list($db, $collection) {
+function _list($collection) {
 	$select = array(
 		'limit'  => (isset($_GET['limit']))?$_GET['limit']:false,
 		'page'   => (isset($_GET['page']))?$_GET['page']:false,
@@ -50,7 +50,7 @@ function _list($db, $collection) {
 		'regex'  => (isset($_GET['regex']))?$_GET['regex']:false,
 		'sort'   => (isset($_GET['sort']))?$_GET['sort']:false
 	);
-	$data = MongoLayer::list(
+	$data = MongoLayer::getList(
 		$collection,
 		$select
 	);
@@ -135,7 +135,9 @@ function _delete($collection, $id) {
  */
 function authenticate(\Slim\Route $route) {
 	$app = \Slim\Slim::getInstance();
-	if (validateUserKey() === false) {
+	$uid = $app->getEncryptedCookie('uid');
+	$key = $app->getEncryptedCookie('key');
+	if (validateUserKey($uid, $key) === false) {
 		$app->halt(401);
 	}
 }
