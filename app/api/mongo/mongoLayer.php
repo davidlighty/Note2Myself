@@ -4,282 +4,278 @@
  * MongoDB CRUD functions
  *
  * Flattening _id objects for better JS models in the front end
- * 
+ *
  */
-class MongoLayer
-{
+class MongoLayer {
 
-  define('DB_NAME','notesApp');
+	define('DB_NAME', 'notesApp');
 
-  define('MONGO_LIST_DEFAULT_PAGE_SIZE',500);
-  define('MONGO_LIST_MAX_PAGE_SIZE',false); // set to a number to enforce a max page size
+	define('MONGO_LIST_DEFAULT_PAGE_SIZE', 500);
+	define('MONGO_LIST_MAX_PAGE_SIZE', false);// set to a number to enforce a max page size
 
-  private function __construct(){}
+	private function __construct() {}
 
-  /**
-   * MongoDB CRUD functions
-   *
-   * Flattening _id objects for better JS models in the front end
-   * 
-   */
+	/**
+	 * MongoDB CRUD functions
+	 *
+	 * Flattening _id objects for better JS models in the front end
+	 *
+	 */
 
-  /**
-   * Create (insert)
-   */
-  public static function create($collection, $document) {
+	/**
+	 * Create (insert)
+	 */
+	public static function create($collection, $document) {
 
-    try {
-    
-      $conn = new MongoClient();
-      $_db = $conn->{DB_NAME};
-      $collection = $_db->{$collection};
-      $collection->insert($document);
-      $conn->close();
-      
-      $document['_id'] = $document['_id']->{'$id'};
-      
-      return $document;
-      
-    } catch (MongoConnectionException $e) {
-      die('Error connecting to MongoDB server');
-    } catch (MongoException $e) {
-      die('Error: ' . $e->getMessage());
-    }
-    
-  }
+		try {
 
-  /**
-   * Read (findOne)
-   */
-  public static function read($collection, $id) {
-    
-    try {
-    
-      $conn = new MongoClient();
-      $_db = $conn->{DB_NAME};
-      $collection = $_db->{$collection};
-      
-      $criteria = array(
-        '_id' => new MongoId($id)
-      );
-      
-      $document = $collection->findOne($criteria);
-      $conn->close();
-      
-      $document['_id'] = $document['_id']->{'$id'};
-      
-      return $document;
-      
-    } catch (MongoConnectionException $e) {
-      die('Error connecting to MongoDB server');
-    } catch (MongoException $e) {
-      die('Error: ' . $e->getMessage());
-    }
-    
-  }
+			$conn       = new MongoClient();
+			$_db        = $conn->{DB_NAME};
+			$collection = $_db->{ $collection};
+			$collection->insert($document);
+			$conn->close();
 
+			$document['_id'] = $document['_id']->{'$id'};
 
-  /**
-   * Update (set properties)
-   */
-  public static function update($collection, $id, $document) {
+			return $document;
 
-    try {
-    
-      $conn = new MongoClient();
-      $_db = $conn->{DB_NAME};
-      $collection = $_db->{$collection};
-      
-      $criteria = array(
-        '_id' => new MongoId($id)
-      );
-      
-      // make sure that an _id never gets through
-      unset($document['_id']);
-      
-      $collection->update($criteria,array('$set' => $document));
-      $conn->close();
-      
-      $document['_id'] = $id;
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
 
-      return $document;
-      
-    } catch (MongoConnectionException $e) {
-      die('Error connecting to MongoDB server');
-    } catch (MongoException $e) {
-      die('Error: ' . $e->getMessage());
-    }
-    
-  }
+	}
 
+	/**
+	 * Read (findOne)
+	 */
+	public static function read($collection, $id) {
 
+		try {
 
-  /**
-   * Delete (remove)
-   */
-  public static function delete($collection, $id) {
+			$conn       = new MongoClient();
+			$_db        = $conn->{DB_NAME};
+			$collection = $_db->{ $collection};
 
-    try {
-    
-      $conn = new MongoClient();
-      $_db = $conn->{DB_NAME};
-      $collection = $_db->{$collection};
-      
-      $criteria = array(
-        '_id' => new MongoId($id)
-      );
+			$criteria = array(
+				'_id' => new MongoId($id)
+			);
 
-      $collection->remove(
-        $criteria,
-        array(
-          'safe' => true
-        )
-      );
-      
-      $conn->close();
-      
-      return array('success'=>'deleted');
-      
-    } catch (MongoConnectionException $e) {
-      die('Error connecting to MongoDB server');
-    } catch (MongoException $e) {
-      die('Error: ' . $e->getMessage());
-    }
-    
-  }
+			$document = $collection->findOne($criteria);
+			$conn->close();
 
-  /**
-   * Collection count
-   */
-  public static function collectionCount($collection, $query = null) {
-    
-    try {
-    
-      $conn = new MongoClient();
-      $_db = $conn->{DB_NAME};
-      $collection = $_db->{$collection};
-      
-      if($query) {
-        return $collection->count($query);
-      } else {
-        return $collection->count();
-      }
-      
-    } catch (MongoConnectionException $e) {
-      die('Error connecting to MongoDB server');
-    } catch (MongoException $e) {
-      die('Error: ' . $e->getMessage());
-    }
-    
-  }
+			$document['_id'] = $document['_id']->{'$id'};
 
-  /**
-  * Mongo list with sorting and filtering
-  *
-  *  $select = array(
-  *    'limit' => 0, 
-  *    'page' => 0,
-  *    'filter' => array(
-  *      'field_name' => 'exact match'
-  *    ),
-  *    'regex' => array(
-  *      'field_name' => '/expression/i'
-  *    ),
-  *    'sort' => array(
-  *      'field_name' => -1
-  *    )
-  *  );
-  */
-  public static function list($collection, $select = null) {
+			return $document;
 
-    try {
-      
-      $conn = new MongoClient();
-      $_db = $conn->{DB_NAME};
-      $collection = $_db->{$collection};
-      
-      $criteria = NULL;
-      
-      // add exact match filters if they exist
-      
-      if(isset($select['filter']) && count($select['filter'])) {
-        $criteria = $select['filter'];
-      }
-      
-      // add regex match filters if they exist
-      
-      if(isset($select['wildcard']) && count($select['wildcard'])) {
-        foreach($select['wildcard'] as $key => $value) {
-          $criteria[$key] = new MongoRegex($value);
-        }
-      }
-      
-      // get results
-      
-      if($criteria) {
-        $cursor = $collection->find($criteria);
-      } else {
-        $cursor = $collection->find();
-      }
-      
-      // sort the results if specified
-      
-      if(isset($select['sort']) && $select['sort'] && count($select['sort'])) {
-        $sort = array();
-        print_r($select);
-        foreach($select['sort'] as $key => $value) {
-          $sort[$key] = (int) $value;
-        }
-        $cursor->sort($sort);
-      }
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
 
-      // set a limit
-      
-      if(isset($select['limit']) && $select['limit']) {
-        if(MONGO_LIST_MAX_PAGE_SIZE && $select['limit'] > MONGO_LIST_MAX_PAGE_SIZE) {
-          $limit = MONGO_LIST_MAX_PAGE_SIZE;
-        } else {
-          $limit = $select['limit'];
-        }
-      } else {
-        $limit = MONGO_LIST_DEFAULT_PAGE_SIZE;
-      }
-      
-      if($limit) {
-        $cursor->limit($limit);
-      }
-      
-      // choose a page if specified
-      
-      if(isset($select['page']) && $select['page']) {
-        $skip = (int)($limit * ($select['page'] - 1));
-        $cursor->skip($skip);
-      }
-      
-      // prepare results to be returned
-      
-      $output = array(
-        'total' => $cursor->count(),
-        'pages' => ceil($cursor->count() / $limit),
-        'results' => array(),
-      );
-      
-      foreach ($cursor as $result) { 
-        // 'flattening' _id object in line with CRUD functions
-        $result['_id'] = $result['_id']->{'$id'};
-        $output['results'][] = $result;
-      }
+	}
 
-      $conn->close();
-      
-      return $output;
-      
-    } catch (MongoConnectionException $e) {
-      die('Error connecting to MongoDB server');
-    } catch (MongoException $e) {
-      die('Error: ' . $e->getMessage());
-    }
+	/**
+	 * Update (set properties)
+	 */
+	public static function update($collection, $id, $document) {
 
-  }
+		try {
+
+			$conn       = new MongoClient();
+			$_db        = $conn->{DB_NAME};
+			$collection = $_db->{ $collection};
+
+			$criteria = array(
+				'_id' => new MongoId($id)
+			);
+
+			// make sure that an _id never gets through
+			unset($document['_id']);
+
+			$collection->update($criteria, array('$set' => $document));
+			$conn->close();
+
+			$document['_id'] = $id;
+
+			return $document;
+
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
+
+	}
+
+	/**
+	 * Delete (remove)
+	 */
+	public static function delete($collection, $id) {
+
+		try {
+
+			$conn       = new MongoClient();
+			$_db        = $conn->{DB_NAME};
+			$collection = $_db->{ $collection};
+
+			$criteria = array(
+				'_id' => new MongoId($id)
+			);
+
+			$collection->remove(
+				$criteria,
+				array(
+					'safe' => true
+				)
+			);
+
+			$conn->close();
+
+			return array('success' => 'deleted');
+
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
+
+	}
+
+	/**
+	 * Collection count
+	 */
+	public static function collectionCount($collection, $query = null) {
+
+		try {
+
+			$conn       = new MongoClient();
+			$_db        = $conn->{DB_NAME};
+			$collection = $_db->{ $collection};
+
+			if ($query) {
+				return $collection->count($query);
+			} else {
+				return $collection->count();
+			}
+
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
+
+	}
+
+	/**
+	 * Mongo list with sorting and filtering
+	 *
+	 *  $select = array(
+	 *    'limit' => 0,
+	 *    'page' => 0,
+	 *    'filter' => array(
+	 *      'field_name' => 'exact match'
+	 *    ),
+	 *    'regex' => array(
+	 *      'field_name' => '/expression/i'
+	 *    ),
+	 *    'sort' => array(
+	 *      'field_name' => -1
+	 *    )
+	 *  );
+	 */
+	public static function list($collection, $select = null) {
+
+		try {
+
+			$conn       = new MongoClient();
+			$_db        = $conn->{DB_NAME};
+			$collection = $_db->{ $collection};
+
+			$criteria = NULL;
+
+			// add exact match filters if they exist
+
+			if (isset($select['filter']) && count($select['filter'])) {
+				$criteria = $select['filter'];
+			}
+
+			// add regex match filters if they exist
+
+			if (isset($select['wildcard']) && count($select['wildcard'])) {
+				foreach ($select['wildcard'] as $key => $value) {
+					$criteria[$key] = new MongoRegex($value);
+				}
+			}
+
+			// get results
+
+			if ($criteria) {
+				$cursor = $collection->find($criteria);
+			} else {
+				$cursor = $collection->find();
+			}
+
+			// sort the results if specified
+
+			if (isset($select['sort']) && $select['sort'] && count($select['sort'])) {
+				$sort = array();
+				print_r($select);
+				foreach ($select['sort'] as $key => $value) {
+					$sort[$key] = (int) $value;
+				}
+				$cursor->sort($sort);
+			}
+
+			// set a limit
+
+			if (isset($select['limit']) && $select['limit']) {
+				if (MONGO_LIST_MAX_PAGE_SIZE && $select['limit'] > MONGO_LIST_MAX_PAGE_SIZE) {
+					$limit = MONGO_LIST_MAX_PAGE_SIZE;
+				} else {
+					$limit = $select['limit'];
+				}
+			} else {
+				$limit = MONGO_LIST_DEFAULT_PAGE_SIZE;
+			}
+
+			if ($limit) {
+				$cursor->limit($limit);
+			}
+
+			// choose a page if specified
+
+			if (isset($select['page']) && $select['page']) {
+				$skip = (int) ($limit*($select['page']-1));
+				$cursor->skip($skip);
+			}
+
+			// prepare results to be returned
+
+			$output = array(
+				'total'   => $cursor->count(),
+				'pages'   => ceil($cursor->count()/$limit),
+				'results' => array(),
+			);
+
+			foreach ($cursor as $result) {
+				// 'flattening' _id object in line with CRUD functions
+				$result['_id']       = $result['_id']->{'$id'};
+				$output['results'][] = $result;
+			}
+
+			$conn->close();
+
+			return $output;
+
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
+
+	}
 
 }
