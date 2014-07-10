@@ -110,7 +110,6 @@ ul {
 }
 .note-stats {
     position: relative;
-    top: 9px;
     z-index: 5;
     float: left;
 }
@@ -129,7 +128,7 @@ ul {
 .note-stats li+li {
     margin-left: 10px;
 }
-.note-stats li a {
+.note-stats li > * {
     display: inline-block;
     padding: 0 5px;
     color: #666;
@@ -151,36 +150,21 @@ ul {
 .note-cmds{
     z-index: 4000;
     position: absolute;
-    bottom:-35px;
+    bottom:-23px;
     right:0;
-    width: 100%;
-    opacity: 0.7;
+    width: 95%;
+    opacity: 0.4;
     margin:5px;
 }
 
 .note-item:hover .edit-note-cmds{
-    display: inline-block;
+    opacity: 0.8;
 }
 
 .note-cmds .edit-note-cmds{
-    display: none;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    top: 9px;
-    z-index: 5;
     float: right;
 }
-.note-cmds .edit-note-cmds li{
-    float: left;
-    margin:1px;
-    padding:2px;
-}
 
-.note-cmds .delete-note:hover i {
-    color:red;
-}
 .note-cmds .edit-undo, .note-cmds .update-note{
     display: none;
 }

@@ -58,7 +58,9 @@
             </div>
             <div class="hero-unit-loading">
                 <div>
-                    <i class="fa fa-spin fa-book fa-5x"></i> Getting Your Notes...
+                    <section class="gl-scene">
+                        <canvas id="3d-canvas" width=800 height=400></canvas>
+                    </section> Getting Your Notes...
                 </div>
             </div>
         </div>
@@ -77,6 +79,8 @@
         <script src="bower_components/backbone/backbone.js"></script>
         <!-- endbuild -->
         <!-- Non-Bower based dependancies -->
+        <script src="scripts/glMatrix-0.9.5.min.js"></script>
+        <script src="scripts/accel.js"></script>
         <script src="scripts/jquery.liveurl.js"></script>
         <script src="scripts/bootstrap.js"></script>
         <!-- build:js({.tmp,app}) scripts/main.js -->
