@@ -16,7 +16,6 @@ notesApp.Views = notesApp.Views || {};
                 self.render();
             });
             this.listenTo(notesApp.notes, 'error', this.errorHandler);
-            this.listenTo(notesApp.notes, 'add', this.render);
         },
         events: {
             'keypress #new-note-text': 'createOnEnter'
@@ -39,7 +38,8 @@ notesApp.Views = notesApp.Views || {};
                 // console.log('note::' + note.toJSON());
                 self.renderNote(note);
             }, this);
-            $('.hero-unit,.hero-unit-loading').toggle();
+             $('.hero-unit').show();
+            $('.hero-unit-loading').hide();
             return this;
         },
         renderNote: function(note) {
@@ -76,6 +76,7 @@ notesApp.Views = notesApp.Views || {};
             if (e.which === ENTER_KEY && this.$input.val().trim()) {
                 console.log('Save new note');
                 this.create();
+                this.render();
             }
         },
         errorHandler: function(model, error) {
