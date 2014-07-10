@@ -37,7 +37,7 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 		$doc = json_decode('{"title": "Sample Title G"}', true);
 
 		// Act
-		$resp = MongoLayer::create(NOTE_CL, $doc);
+		$resp = MongoLayer::create(self::NOTE_CL, $doc);
 
 		// Assert
 		$this->assertNotNull($resp);
@@ -51,10 +51,10 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 		// Arrange
 		$title = "Sample Title G";
 		$doc   = json_decode('{"title": '.$title.'}', true);
-		$resp  = MongoLayer::create(NOTE_CL, $doc);
+		$resp  = MongoLayer::create(self::NOTE_CL, $doc);
 
 		// Act
-		$found = MongoLayer::read(NOTE_CL, $doc["_id"]);
+		$found = MongoLayer::read(self::NOTE_CL, $doc["_id"]);
 
 		// Assert
 		$this->assertEquals($title, $found["title"]);
@@ -67,11 +67,11 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 		// Arrange
 		$title = "Sample Title A";
 		$doc   = json_decode('{"title": "Sample Title G"}', true);
-		$resp  = MongoLayer::create(NOTE_CL, $doc);
+		$resp  = MongoLayer::create(self::NOTE_CL, $doc);
 		$doc   = json_decode('{"title":  '.$title.'}', true);
 
 		// Act
-		$updated = MongoLayer::update(NOTE_CL, $doc);
+		$updated = MongoLayer::update(self::NOTE_CL, $doc);
 
 		// Assert
 		$this->assertEquals($title, $found["title"]);
@@ -83,7 +83,7 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 	public function testCanDelete() {
 		// Arrange
 		$doc  = json_decode('{"title": "Sample Title G"}', true);
-		$resp = MongoLayer::create(NOTE_CL, $doc);
+		$resp = MongoLayer::create(self::NOTE_CL, $doc);
 
 		// Act
 		$deleted = MongoLayer::delete($resp["_id"]);

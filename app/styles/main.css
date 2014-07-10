@@ -1,15 +1,19 @@
+html,body{
+    margin:0;
+    padding:0;
+}
 body {
     background: #edf5f9 bottom repeat-x;
-    height: 460px;
-    width: 100%;
-    min-width: 960px;
     position: absolute;
     z-index: -1;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .hero-unit {
-    margin: 50px auto 0 auto;
-    width: 80%;
+    margin: 49px auto 0 auto;
+    width: 100%;
+    height: 100%;
+    padding:20px;
+    box-shadow: inset 0 0 30px #000000;
 }
 a {
     color: #4183c4;
@@ -19,6 +23,18 @@ ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
+}
+.quick-note-text textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 110%;
+    opacity: 0.6;
+    z-index: 10;
+}
+.quick-note-text textarea:hover,.quick-note-text textarea:focus{
+    box-shadow: 1px 1px 3px 0px black;
+    opacity: 1;
+    z-index:1000;
 }
 .note-item {
     display: inline-block;
@@ -59,14 +75,12 @@ ul {
 .note-item input, .note-item textarea {
     width: 100%;
 }
-.note-item textarea{
+.note-item textarea {
     height: 100%;
 }
-
-.note-title-edit,.note-text-edit{
-    display:none;
+.note-title-edit, .note-text-edit {
+    display: none;
 }
-
 .note-link {
     position: absolute;
     bottom: 4px;

@@ -33,7 +33,19 @@ window.notesApp = {
         console.log('alertView',alertView);
     }
 };
+
+function respondContent() {
+    var newHeight = $(window).height() + 'px';
+    console.log('newHeight',newHeight);
+    //$('.hero-unit').attr('width', $(window).width()); //max width
+    $('body').css('height', newHeight); //max height
+}
+
 $(document).ready(function() {
     'use strict';
+    respondContent();
     notesApp.init();
+
 });
+
+$(window).resize( respondContent );
