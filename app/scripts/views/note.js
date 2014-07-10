@@ -18,7 +18,8 @@ notesApp.Views = notesApp.Views || {};
         events: {
             'click .update-note': 'save',
             'click .delete-note': 'clear',
-            'click .edit-note': 'edit'
+            'click .edit-note': 'edit',
+            'click .edit-undo': 'edit'
         },
         render: function() {
             console.log('this.$el', this.$el);
@@ -34,16 +35,14 @@ notesApp.Views = notesApp.Views || {};
             var self = this;
             this.editing = !this.editing;
             // Switch to inputs
-            this.$('.note-title,.note-text,.note-title-edit,.note-text-edit').toggle();
+            this.$('.note-title,.note-text,.note-title-edit,.note-text-edit,.update-note,.edit-undo,.edit-note').toggle();
             if (!this.editing) {
                 if (this.modelsave) {
                     this.model = this.modelsave;
                 }
-                this.$('.edit-note').html('Edit');
                 this.render();
             } else {
                 this.modelsave = this.model;
-                this.$('.edit-note').html('Cancel');
                 // wire up liveUrl detection
                 this.$('.note-text-edit').liveUrl({
                     success: function(data) {

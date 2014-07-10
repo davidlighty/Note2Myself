@@ -4,10 +4,10 @@ var ESC_KEY = 27;
 
 $.ajaxSetup({
     statusCode: {
-        401: function(){
+        401: function() {
             // Redirec the to the login page.
             window.location.replace('#login');
-         
+
         },
         403: function() {
             // 403 -- Access denied
@@ -31,16 +31,18 @@ window.notesApp = {
         console.log('notesView', notesView);
         // Init the alert view which will catch/watch events
         var alertView = new notesApp.Views.Alert();
-        console.log('alertView',alertView);
+        console.log('alertView', alertView);
     }
 };
 
 function respondContent() {
     var winHeight = $(window).height();
     var docHeight = $(document).height();
-    var wrapHeight = (docHeight>winHeight)?docHeight:winHeight;
+    var wrapHeight = (docHeight > winHeight) ? docHeight : winHeight;
     //$('.hero-unit').attr('width', $(window).width()); //max width
-    $('content-wrap').css('height', wrapHeight); //max height
+    wrapHeight -= 50; // Compensate for margin....
+    wrapHeight = wrapHeight + '.px';
+    $('.content-wrap').css('height', wrapHeight); //max height
 }
 
 $(document).ready(function() {
@@ -49,4 +51,4 @@ $(document).ready(function() {
     notesApp.init();
 });
 
-$(window).resize( respondContent );
+$(window).resize(respondContent);

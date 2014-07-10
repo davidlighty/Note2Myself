@@ -9,21 +9,29 @@
         </p>
         <textarea type="text" placeholder="What would you like to save?" class="note-text-edit"><%= text %></textarea>
     </div>
+    <section class="note-cmds">
+        <ul class="note-stats">
+            <li>
+                <div>
+                    <small>Note type: <%= type %></small>
+                </div>
+            </li>
+        </ul>
+        <ul class="edit-note-cmds">
+            <li><span class="update-note"><i class="fa fa-floppy-o"></i></span></li>
+            <li><span class="edit-note"><i class="fa fa-pencil"></i></span></li>
+            <li><span class="edit-undo"><i class="fa fa-undo"></i></span></li>
+            <li><span class="delete-note"><i class="fa fa-times-circle"></i></span></li>
+        </ul>
+    </section>
 </section>
 <section class="note-extras-section">
     <ul class="note-stats">
         <li>
-            <div>
-                <small>Note type: <%= type %></small>
-            </div></li>
             <!-- Created -->
             <div>
                 <small><%= created %></small>
-            </div></li>
-        </ul>
-    </section>
-    <section>
-        <button class="update-note">Save</button>
-        <button class="edit-note">Edit</button>
-        <button class="delete-note">X</button>
-    </section>
+            </div>
+        </li>
+    </ul>
+</section>
