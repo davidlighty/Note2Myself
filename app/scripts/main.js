@@ -45,7 +45,6 @@ $(document).ready(function() {
     'use strict';
     respondContent();
     notesApp.init();
-
 });
 
 $(window).resize( respondContent );

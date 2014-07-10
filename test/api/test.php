@@ -54,7 +54,7 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 		$resp  = MongoLayer::create(self::NOTE_CL, $doc);
 
 		// Act
-		$found = MongoLayer::read(self::NOTE_CL, $doc["_id"]);
+		$found = MongoLayer::read(self::NOTE_CL, $resp["_id"]);
 
 		// Assert
 		$this->assertEquals($title, $found["title"]);
@@ -71,7 +71,7 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 		$doc   = json_decode('{"title":  '.$title.'}', true);
 
 		// Act
-		$updated = MongoLayer::update(self::NOTE_CL, $doc);
+		$updated = MongoLayer::update(self::NOTE_CL, $resp["_id"], $doc);
 
 		// Assert
 		$this->assertEquals($title, $found["title"]);
@@ -86,7 +86,7 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 		$resp = MongoLayer::create(self::NOTE_CL, $doc);
 
 		// Act
-		$deleted = MongoLayer::delete($resp["_id"]);
+		$deleted = MongoLayer::delete(self::NOTE_CL, $resp["_id"]);
 
 		// Assert no exception?
 

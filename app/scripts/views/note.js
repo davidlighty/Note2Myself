@@ -5,10 +5,13 @@ notesApp.Views = notesApp.Views || {};
     notesApp.Views.Note = Backbone.View.extend({
         tagName: 'li',
         template: JST['app/scripts/templates/note.ejs'],
-        className: 'note-item',
+        className: function() {
+            var cl1 = 'note-item';
+            var cl2 = 'note-type-' + this.model.get('type');
+            return cl1 + ' ' + cl2;
+        },
         initialize: function() {
             console.log('Note View :: Init');
-            //this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.handleError);
         },

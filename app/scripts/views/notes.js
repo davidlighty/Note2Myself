@@ -19,8 +19,7 @@ notesApp.Views = notesApp.Views || {};
             this.listenTo(notesApp.notes, 'add', this.render);
         },
         events: {
-            'keypress #new-note-text': 'createOnEnter',
-            'click #save-new-note': 'create'
+            'keypress #new-note-text': 'createOnEnter'
         },
         render: function() {
             console.log('Notes View::Render');
@@ -32,10 +31,7 @@ notesApp.Views = notesApp.Views || {};
                 success: function(data) {
                     console.log(data);
                     // this return the first found url data
-                    // self.model.set('type', 'website');
-                    // self.model.set('title', data.title);
-                    // self.model.set('text', data.url);
-                    // self.model.set('description', data.description);
+                    self.quickNoteType='website';
                 }
             });
             this.$list = this.$('#notes-list');
@@ -43,6 +39,7 @@ notesApp.Views = notesApp.Views || {};
                 // console.log('note::' + note.toJSON());
                 self.renderNote(note);
             }, this);
+            $('.hero-unit,.hero-unit-loading').toggle();
             return this;
         },
         renderNote: function(note) {
@@ -52,18 +49,18 @@ notesApp.Views = notesApp.Views || {};
             });
             this.$list.append(noteView.render().el);
         },
+        quickNoteType:'text',
         newAttributes: function() {
             return {
-                "title": this.$('#new-note-title').val().trim(),
+                "title": "",
                 "description": "",
                 "userid": "0001",
                 "text": this.$('#new-note-text').val().trim(),
-                "type": "text",
+                "type": this.quickNoteType,
                 "created": Date()
             }
         },
         clearAttributes: function() {
-            this.$('#new-note-title').val('');
             this.$('#new-note-text').val('');
         },
         create: function() {
