@@ -53,11 +53,9 @@ notesApp.Views = notesApp.Views || {};
         newAttributes: function() {
             return {
                 "title": "",
-                "description": "",
                 "userid": "0001",
                 "text": this.$('#new-note-text').val().trim(),
-                "type": this.quickNoteType,
-                "created": Date()
+                "type": this.quickNoteType
             }
         },
         clearAttributes: function() {

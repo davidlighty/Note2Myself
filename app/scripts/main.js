@@ -29,16 +29,18 @@ window.notesApp = {
         // Init the main notes view
         var notesView = new notesApp.Views.Notes();
         console.log('notesView', notesView);
+        // Init the alert view which will catch/watch events
         var alertView = new notesApp.Views.Alert();
         console.log('alertView',alertView);
     }
 };
 
 function respondContent() {
-    var newHeight = $(window).height() + 'px';
-    console.log('newHeight',newHeight);
+    var winHeight = $(window).height();
+    var docHeight = $(document).height();
+    var wrapHeight = (docHeight>winHeight)?docHeight:winHeight;
     //$('.hero-unit').attr('width', $(window).width()); //max width
-    $('body').css('height', newHeight); //max height
+    $('content-wrap').css('height', wrapHeight); //max height
 }
 
 $(document).ready(function() {
