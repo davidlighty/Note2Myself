@@ -28,6 +28,16 @@ notesApp.Views = notesApp.Views || {};
             console.log(notesApp.notes.models);
             this.$el.html(this.template());
             this.$input = this.$('#new-note-text');
+            this.$input.liveUrl({
+                success: function(data) {
+                    console.log(data);
+                    // this return the first found url data
+                    // self.model.set('type', 'website');
+                    // self.model.set('title', data.title);
+                    // self.model.set('text', data.url);
+                    // self.model.set('description', data.description);
+                }
+            });
             this.$list = this.$('#notes-list');
             _.each(notesApp.notes.models, function(note) {
                 // console.log('note::' + note.toJSON());
