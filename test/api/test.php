@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/../mongo/mongoLayer.php';
+require_once dirname(__FILE__).'/../../app/api/mongo/mongoLayer.php';
 
 use noteAppApi\MongoLayer;
 
