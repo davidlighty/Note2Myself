@@ -13,31 +13,34 @@ notesApp.Views = notesApp.Views || {};
             this.listenTo(this.model, 'error', this.handleError);
         },
         events: {
-            'click .update-note':'save',
-            'click .delete-note':'clear'
+            'click .update-note': 'save',
+            'click .delete-note': 'clear',
+            'click .edit-note': 'edit'
         },
         render: function() {
             console.log('this.$el', this.$el);
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         },
-        save:function(){
-            console.log('save note');
+        edit: function() {
+            // Switch to inputs
+            this.$('.note-title,.note-text,.note-title-edit,.note-text-edit').toggle();
+        },
+        save: function() {
+            console.log('update note');
             // Set changes and Save
-            this.model.set('title', this.$('.note-title').text());
-            this.model.set('text', this.$('.note-text').text());
-            console.log('this.model',this.model);
-            this.model.save({
-                wait:true
-            });
+            this.model.set('title', this.$('.note-title-edit').val().trim());
+            this.model.set('text', this.$('.note-text-edit').val().trim());
+            console.log('this.model', this.model);
+            this.model.save();
         },
         clear: function() {
             console.log('delete note', this.model.toJSON());
             this.model.destroy({
-                wait:true
+                wait: true
             });
         },
-        handleError:function(){
+        handleError: function() {
             console.log('Error!');
             this.$el.addClass('alert-warning');
         }

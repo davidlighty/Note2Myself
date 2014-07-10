@@ -1,14 +1,16 @@
 <section class="note-section">
-    <div class="note-title">
-        <h1 contenteditable="true" class="note-title"><%= title %></h1>
+    <div class="note-title-section">
+        <h1 class="note-title"><%= title %></h1>
+        <input type="text" value="<%= title %>" class="note-title-edit" placeholder="What a title? "/> 
     </div>
-    <div class="note-text">
-        <p contenteditable="true" class="note-text">
+    <div class="note-text-section">
+        <p class="note-text">
         <%= text %>
         </p>
+         <textarea type="text" placeholder="What would you like to save?" class="note-text-edit"><%= text %></textarea>
     </div>
 </section>
-<section class="note-extras">
+<section class="note-extras-section">
     <ul>
         <!-- Created -->
         <!-- User -->
@@ -17,5 +19,6 @@
 </section>
 <section>
     <button class="update-note">Save</button>
+    <button class="edit-note">Edit</button>
     <button class="delete-note">X</button>
 </section>

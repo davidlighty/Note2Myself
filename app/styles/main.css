@@ -27,7 +27,8 @@ ul {
     *display: inline;
     *margin-right: 0.3em;
     *zoom: 1;
-    max-height: 290px;
+    min-height: 200px;
+    max-height: 390px;
     width: 33.333%;
 }
 .note-item h1 {
@@ -38,10 +39,13 @@ ul {
     padding: 8px;
     margin: 7px;
     margin-bottom: 15px;
-    background: #fff;
     border-radius: 2px;
-    box-shadow: 1px 1px 3px 0px black;
     position: relative;
+}
+.note-item .note-section {
+    background: #fff;
+    box-shadow: 1px 1px 3px 0px black;
+    min-height: 200px;
 }
 .note-item .note-desc {
     padding: 0 0 0 7px;
@@ -52,14 +56,25 @@ ul {
 .note-item > section small {
     display: inline-block;
 }
+.note-item input, .note-item textarea {
+    width: 100%;
+}
+.note-item textarea{
+    height: 100%;
+}
+
+.note-title-edit,.note-text-edit{
+    display:none;
+}
+
 .note-link {
     position: absolute;
     bottom: 4px;
     right: 4px;
     opacity: 0.6;
 }
-.note-link:hover{
-	opacity: 1;
+.note-link:hover {
+    opacity: 1;
 }
 .note-stats {
     position: relative;
@@ -76,8 +91,8 @@ ul {
     color: #666;
     opacity: 0.6;
 }
-.note-card:hover .note-stats li{
-	opacity: 1;
+.note-card:hover .note-stats li {
+    opacity: 1;
 }
 .note-stats li+li {
     margin-left: 10px;
