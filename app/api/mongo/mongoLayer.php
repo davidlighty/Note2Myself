@@ -1,11 +1,16 @@
 <?php
 
+namespace noteAppApi;
+
+use \MongoClient;
+
 /**
  * MongoDB CRUD functions
  *
  * Flattening _id objects for better JS models in the front end
  *
  */
+
 class MongoLayer {
 
 	// DB Constants

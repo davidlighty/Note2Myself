@@ -1,69 +1,95 @@
 <?php
 
-require_once dirname(__FILE__).'/../mongo/mongoLayer.php';
+namespace noteAppApi;
 
-class MongoTests extends PHPUnit_Framework_TestCase {
+class MongoLayerTests extends PHPUnit_Framework_TestCase {
 
 	private $db;
 	private $collection;
 
+	const NOTE_CL = "notes";
+
 	// What to do before each test
 	protected function setUp() {
-		try {
-		    $conn = new MongoClient(); // connects to localhost:27017
-		    $this->db = $conn->{'noteApp'};
-		    $this->collection = $this->db->{'notes'};
-		}catch(Exception $err){
-			var_dump($err);
-		}
+
 	}
 
 	// What to do after each test
-  	protected function tearDown() {}
+	protected function tearDown() {}
 
-  	///////////// TESTS ////////////////
+	///////////// TESTS ////////////////
 
-	public function testCanConnect(){
-		  $this->assertNotNull($this->db);
-	}
-	
-	public function testCanCreate(){
-		// Arrange
-        $doc = json_decode('{"title": "Sample Title G"}',true);
-            
-		// Act
-        $resp = mongoCreate("noteApp","notes",  $doc);
-
-		// Assert
-        $this->assertNotNull($resp);
-
+	/**
+	 * @covers \noteAppApi\MongoLayer\MongoLayer::__construct
+	 * @expectedException \Exception
+	 */
+	public function testExceptionIsRaisedForConstructor() {
+		new MongoLayer();
 	}
 
-	public function testCanRead(){
+	/**
+	 * @covers \noteAppApi\MongoLayer\MongoLayer::create
+	 */
+	public function testCanCreate() {
 		// Arrange
+		$doc = json_decode('{"title": "Sample Title G"}', true);
 
 		// Act
+		$resp = MongoLayer::create(NOTE_CL, $doc);
 
 		// Assert
+		$this->assertNotNull($resp);
+
 	}
 
-	public function testCanUpdate(){
+	/**
+	 * @covers \noteAppApi\MongoLayer\MongoLayer::read
+	 */
+	public function testCanRead() {
 		// Arrange
+		$title = "Sample Title G";
+		$doc   = json_decode('{"title": '.$title.'}', true);
+		$resp  = MongoLayer::create(NOTE_CL, $doc);
 
 		// Act
+		$found = MongoLayer::read(NOTE_CL, $doc["_id"]);
 
 		// Assert
+		$this->assertEquals($title, $found["title"]);
 	}
 
-	public function testCanDelete(){
+	/**
+	 * @covers \noteAppApi\MongoLayer\MongoLayer::update
+	 */
+	public function testCanUpdate() {
 		// Arrange
+		$title = "Sample Title A";
+		$doc   = json_decode('{"title": "Sample Title G"}', true);
+		$resp  = MongoLayer::create(NOTE_CL, $doc);
+		$doc   = json_decode('{"title":  '.$title.'}', true);
 
 		// Act
+		$updated = MongoLayer::update(NOTE_CL, $doc);
 
 		// Assert
+		$this->assertEquals($title, $found["title"]);
+	}
+
+	/**
+	 * @covers \noteAppApi\MongoLayer\MongoLayer::delete
+	 */
+	public function testCanDelete() {
+		// Arrange
+		$doc  = json_decode('{"title": "Sample Title G"}', true);
+		$resp = MongoLayer::create(NOTE_CL, $doc);
+
+		// Act
+		$deleted = MongoLayer::delete($resp["_id"]);
+
+		// Assert no exception?
+
 	}
 
 	///////////// TESTS ////////////////
-  	
-		
+
 }

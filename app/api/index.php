@@ -16,10 +16,12 @@
 require 'Slim/Slim.php';
 require 'mongo/mongoLayer.php';
 
+use noteAppApi\MongoLayer;
+use Slim\Slim;
+
 /**
  * Create API App
  */
-use Slim\Slim;
 Slim::registerAutoloader();
 $app = new Slim();
 
