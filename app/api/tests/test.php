@@ -2,7 +2,7 @@
 
 namespace noteAppApi;
 
-class MongoLayerTests extends PHPUnit_Framework_TestCase {
+class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 
 	private $db;
 	private $collection;
