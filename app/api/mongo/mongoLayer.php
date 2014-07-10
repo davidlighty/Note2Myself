@@ -3,6 +3,10 @@
 namespace noteAppApi;
 
 use \MongoClient;
+use \MongoConnectionException;
+use \MongoException;
+use \MongoId;
+use \MongoRegex;
 
 /**
  * MongoDB CRUD functions

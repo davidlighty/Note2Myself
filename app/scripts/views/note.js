@@ -23,6 +23,10 @@ notesApp.Views = notesApp.Views || {};
         },
         save:function(){
             console.log('save note');
+            // Set changes and Save
+            this.model.set('title', this.$('.note-title').text());
+            this.model.set('text', this.$('.note-text').text());
+            console.log('this.model',this.model);
             this.model.save({
                 wait:true
             });
