@@ -1,6 +1,8 @@
 <?php
 
-namespace noteAppApi;
+require_once dirname(__FILE__).'/../mongo/mongoLayer.php';
+
+use noteAppApi\MongoLayer;
 
 class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 
