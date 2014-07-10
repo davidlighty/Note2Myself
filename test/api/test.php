@@ -22,7 +22,7 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 	///////////// TESTS ////////////////
 
 	/**
-	 * @covers \noteAppApi\MongoLayer\MongoLayer::__construct
+	 * covers \noteAppApi\MongoLayer\MongoLayer::__construct
 	 * @expectedException \Exception
 	 */
 	// public function testExceptionIsRaisedForConstructor() {
@@ -30,7 +30,7 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 	// }
 
 	/**
-	 * @covers \noteAppApi\MongoLayer\MongoLayer::create
+	 * covers \noteAppApi\MongoLayer\MongoLayer::create
 	 */
 	public function testCanCreate() {
 		// Arrange
@@ -45,7 +45,7 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers \noteAppApi\MongoLayer\MongoLayer::read
+	 * covers \noteAppApi\MongoLayer\MongoLayer::read
 	 */
 	public function testCanRead() {
 		// Arrange
@@ -61,7 +61,7 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers \noteAppApi\MongoLayer\MongoLayer::update
+	 * covers \noteAppApi\MongoLayer\MongoLayer::update
 	 */
 	public function testCanUpdate() {
 		// Arrange
@@ -78,7 +78,7 @@ class MongoLayerTests extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers \noteAppApi\MongoLayer\MongoLayer::delete
+	 * covers \noteAppApi\MongoLayer\MongoLayer::delete
 	 */
 	public function testCanDelete() {
 		// Arrange
