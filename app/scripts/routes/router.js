@@ -18,6 +18,7 @@ notesApp.Routers = notesApp.Routers || {};
                 this.notes();
             } else {
                 // Home
+                var homeView = new notesApp.Views.Home();
                 this.notloading();
             }
         },
