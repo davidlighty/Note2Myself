@@ -34,6 +34,23 @@ I took this and wanted to make something more, bigger, grander....like I do with
 
 ---
 
+##### User Auth
+
+Implemented simple User Auth with Slim's encrypted php session support.  Implemented a backbone modal login form [Backbone.Modal](http://awkward.github.io/backbone.modal/)  Only issue I see so far is that re-clicking the same URL/Route doesn't reload like a postback...as you're already on that route.
+
+##### CSS Transitions
+
+Pushed the "quick note" function up into a transitioned element at the top.  Good excerise to learn more about transitions.  Just a little "slide".  Need to make a little transitions library...hmmm.
+
+##### CSS WebGL
+
+I've been working on a side personal project to understand and use [WebGL](https://github.com/davidlighty/3d-Canvas) and I got sidetracking making a neat loading screen while waiting on the MongoLayer to return the notes.
+
+##### MongoLayer and TravisCI
+
+Added a mongo crud layer for the backend.  Found a nice module online and refactored it into a singleton design
+
+
 ##### Creating the API
 
 Using Slim was pretty easy and straight-forward.  Had some issues with getting the namespacing and autoloader working correctly.
