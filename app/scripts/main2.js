@@ -20,31 +20,28 @@ window.notesApp = {
     Models: {},
     Collections: {},
     Views: {},
-    User: null,
     Routers: {},
     init: function() {
         'use strict';
         console.log('Notes App Init');
         // Init a main event obj
         this.vent = _.extend({}, Backbone.Events);
+        // Init the main notes view
+        var notesView = new notesApp.Views.Notes();
+        console.log('notesView', notesView);
         // Init the alert view which will catch/watch events
         var alertView = new notesApp.Views.Alert();
         console.log('alertView', alertView);
-        // Start Router
-        Backbone.history.start();
     }
 };
 
 function respondContent() {
     var winHeight = $(window).height();
-    //console.log('winHeight', winHeight);
     var docHeight = $(document).height();
-    //console.log('docHeight', docHeight);
     var wrapHeight = (docHeight > winHeight) ? docHeight : winHeight;
     //$('.hero-unit').attr('width', $(window).width()); //max width
     wrapHeight -= 50; // Compensate for margin....
-    wrapHeight = wrapHeight + 'px';
-    console.log('wrapHeight', wrapHeight);
+    wrapHeight = wrapHeight + '.px';
     $('.content-wrap').css('height', wrapHeight); //max height
 }
 
