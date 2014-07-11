@@ -30,7 +30,7 @@ notesApp.Views = notesApp.Views || {};
                 success: function(data) {
                     console.log(data);
                     // this return the first found url data
-                    self.quickNoteType='website';
+                    self.quickNoteType = 'website';
                 }
             });
             this.$list = this.$('#notes-list');
@@ -38,8 +38,7 @@ notesApp.Views = notesApp.Views || {};
                 // console.log('note::' + note.toJSON());
                 self.renderNote(note);
             }, this);
-             $('.hero-unit').show();
-            $('.hero-unit-loading').hide();
+            notesApp.router.notloading();
             return this;
         },
         renderNote: function(note) {
@@ -49,7 +48,7 @@ notesApp.Views = notesApp.Views || {};
             });
             this.$list.append(noteView.render().el);
         },
-        quickNoteType:'text',
+        quickNoteType: 'text',
         newAttributes: function() {
             return {
                 "title": "",

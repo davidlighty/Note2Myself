@@ -122,10 +122,10 @@ function setMatrixUniforms() {
 }
 
 function drawScene(objs) {
-    gl.clearColor(0.05, 0.05, 0.05, 0.00);
+   // gl.clearColor(0.05, 0.05, 0.05, 0.00);
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+    mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 10.0, pMatrix);
     mat4.identity(mvMatrix);
     for (var i = objs.length - 1; i >= 0; i--) {
         var obj = objs[i];
@@ -291,15 +291,15 @@ function makePyramid() {
 var makeScene = function() {
     logIt('makeScene');
     // Get current z-Index
-    var zIdx = $('#zaxis').val() * -1;
-    var yIdx = $('#yaxis').val() * 1;
-    var xIdx = $('#xaxis').val() * 1;
+    var zIdx = 5 * -1;
+    var yIdx = 0 * 1;
+    var xIdx = 0 * 1;
     var position = [xIdx, yIdx, zIdx];
-    pyramid.setPosition(position);
+    pyramid.setPosition(position);  
     logIt('zIdx', zIdx);
     // Rotation
-    var rotation = parseInt($('#rot').val());
-    if (autoRotate) {
+    var rotation = 0;
+    if (true) {
         logIt('pyramid', pyramid);
         rotation = pyramid.rotation + 1;
     }
@@ -328,7 +328,6 @@ function logIt(msg, printVar) {
 $(document).ready(function() {
     // Set Canvas Element
     canvas = $('canvas#3d-canvas')[0];
-    respondCanvas();
     // Init our WebGL Scene
     webGLStart();
     // Create our obj
@@ -348,33 +347,4 @@ $(document).ready(function() {
         var ONE_FRAME_TIME = 1000.0 / 60.0;
         setInterval(mainloop, ONE_FRAME_TIME);
     }
-    // Command Events
-    $('#center').click(function() {
-        logIt('Center');
-        $('#zaxis').val = 0;
-        $('#zyaxis').val = 0;
-        $('#xaxis').val = 0;
-    });
-    $('#auto-rotate').click(function() {
-        // Begin auto-rotate
-        autoRotate = !autoRotate;
-    });
-    $('#rot-x').click(function() {
-        x ^= 1; // Bitwise to flip axis on/off.
-        setRotation();
-    });
-    $('#rot-y').click(function() {
-        y ^= 1;
-        setRotation();
-    });
-    $('#rot-z').click(function() {
-        z ^= 1;
-        setRotation();
-    });
 });
-// Set Canvas size.
-//$(window).resize( respondCanvas );
-function respondCanvas() {
-    $('canvas#3d-canvas').attr('width', $(window).width()); //max width
-    // $('canvas#3d-canvas').attr('height', $(window).height()); //max height
-}
