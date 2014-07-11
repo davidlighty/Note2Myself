@@ -36,7 +36,7 @@ window.notesApp = {
 };
 
 function respondContent() {
-    var winHeight = $(window).height();
+    var winHeight = window.outerHeight;
     console.log('winHeight',winHeight);
     var docHeight = $(document).height();
     console.log('docHeight',docHeight);
