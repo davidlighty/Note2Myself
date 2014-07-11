@@ -195,13 +195,13 @@ ul {
 .note-cmds {
     z-index: 4000;
     position: absolute;
-    bottom: -23px;
+    bottom: -29px;
     right: 0;
     width: 95%;
-    opacity: 0.4;
+    opacity: 0.5;
     margin: 5px;
 }
-.note-item:hover .edit-note-cmds {
+.note-item:hover .note-cmds {
     opacity: 0.8;
 }
 .note-cmds .edit-note-cmds {
@@ -209,4 +209,7 @@ ul {
 }
 .note-cmds .edit-undo, .note-cmds .update-note {
     display: none;
+}
+.note-cmds .delete-note:hover{
+	color:red;
 }

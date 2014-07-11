@@ -39,6 +39,8 @@ notesApp.Views = notesApp.Views || {};
                 self.renderNote(note);
             }, this);
             notesApp.router.notloading();
+            // Tooltips
+            this.$('.quick-note-text').tooltip();
             return this;
         },
         renderNote: function(note) {

@@ -49,8 +49,8 @@ notesApp.Views = notesApp.Views || {};
                         console.log(data);
                         // this return the first found url data
                         self.model.set('type', 'website');
-                        self.model.set('title', data.url);
-                        self.model.set('text', data.title);
+                        this.$('.note-title-edit').val(data.url);
+                        this.$('.note-text-edit').val(data.title);
                         self.model.set('description', data.description);
                     }
                 });

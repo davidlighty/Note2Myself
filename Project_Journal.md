@@ -48,7 +48,9 @@ I've been working on a side personal project to understand and use [WebGL](https
 
 ##### MongoLayer and TravisCI
 
-Added a mongo crud layer for the backend.  Found a nice module online and refactored it into a singleton design
+Added a mongo crud layer for the backend.  Found a nice module online and refactored it into a singleton design, used namespaces.  Using namespaces I ran into an issue with using these namespaces correctly in PHP, where I couldn't use global correctly.  Solution was the add "use \<classname>" which solved the issue.
+
+TravisCI was implemented to run all PHP unit tests for the MongoLayer for every Github checkin.
 
 
 ##### Creating the API
