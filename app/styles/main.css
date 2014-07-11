@@ -76,10 +76,18 @@ ul {
     display: inline-block;
 }
 .quick-note-text textarea {
+	transition: height 2s ease;
+	-moz-transition: height 2s ease;
+	-webkit-transition: height 2s ease;
     height: 10px;
     float: left;
     margin-left: 18px;
     width: 96%;
+}
+.quick-note-text:hover textarea{
+	transition: height 2s ease;
+	-moz-transition: height 2s ease;
+	-webkit-transition: height 2s ease;
 }
 .quick-note-text:hover textarea, .quick-note-text textarea:focus {
     color: #111;
