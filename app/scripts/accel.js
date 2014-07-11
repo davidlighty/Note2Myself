@@ -122,7 +122,7 @@ function setMatrixUniforms() {
 }
 
 function drawScene(objs) {
-   // gl.clearColor(0.05, 0.05, 0.05, 0.00);
+    // gl.clearColor(0.05, 0.05, 0.05, 0.00);
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 10.0, pMatrix);
@@ -175,7 +175,7 @@ var drawableObj = function(params) {
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.colors), gl.STATIC_DRAW);
         },
         setGLArrayType: function(type) {
-        	logIt('setGLArrayType');
+            logIt('setGLArrayType');
             this.gl_array_type = type;
         },
         setVerices: function(verts) {
@@ -183,32 +183,32 @@ var drawableObj = function(params) {
             this.vertices = verts;
         },
         setPosition: function(position) {
-        	logIt('setPosition');
+            logIt('setPosition');
             logIt('position', position);
             this.position = position;
         },
         setRotation: function(rotation) {
-        	logIt('setRotation');
+            logIt('setRotation');
             this.rotation = rotation;
         },
         draw: function() {
-        	logIt('draw');
-        	//Push
-        	mvPushMatrix();
+            logIt('draw');
+            //Push
+            mvPushMatrix();
 
-	        mat4.translate(mvMatrix, this.position);
-	        mat4.rotate(mvMatrix, degToRad(this.rotation), theRotatingAxis);
-	        // Obj
-	        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-	        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, this.axis, gl.FLOAT, false, 0, 0);
-	        // Colors
-	        gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
-	        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, this.colorLen, gl.FLOAT, false, 0, 0);
-	        setMatrixUniforms();
-	        gl.drawArrays(this.gl_array_type, 0, this.points);
+            mat4.translate(mvMatrix, this.position);
+            mat4.rotate(mvMatrix, degToRad(this.rotation), theRotatingAxis);
+            // Obj
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+            gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, this.axis, gl.FLOAT, false, 0, 0);
+            // Colors
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+            gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, this.colorLen, gl.FLOAT, false, 0, 0);
+            setMatrixUniforms();
+            gl.drawArrays(this.gl_array_type, 0, this.points);
 
-        	//Pop
-        	mvPopMatrix();
+            //Pop
+            mvPopMatrix();
         },
         init: function(params) {
             logIt('Init Drawable Object');
@@ -295,7 +295,7 @@ var makeScene = function() {
     var yIdx = 0 * 1;
     var xIdx = 0 * 1;
     var position = [xIdx, yIdx, zIdx];
-    pyramid.setPosition(position);  
+    pyramid.setPosition(position);
     logIt('zIdx', zIdx);
     // Rotation
     var rotation = 0;
@@ -310,7 +310,9 @@ var makeScene = function() {
     drawScene([pyramid]);
 };
 var mainloop = function() {
-    makeScene();
+    if ($('canvas#3d-canvas').is(":visible")) {
+        makeScene();
+    }
 };
 //////////////////// DRAW LOOP /////////////////////////
 //
@@ -336,6 +338,7 @@ $(document).ready(function() {
     // Start our rendering loop
     // Browser Compat Check
     var animFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || null;
+
     if (animFrame !== null) {
         var recursiveAnim = function() {
             mainloop();
@@ -347,4 +350,5 @@ $(document).ready(function() {
         var ONE_FRAME_TIME = 1000.0 / 60.0;
         setInterval(mainloop, ONE_FRAME_TIME);
     }
+
 });

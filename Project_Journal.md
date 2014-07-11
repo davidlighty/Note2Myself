@@ -34,6 +34,10 @@ I took this and wanted to make something more, bigger, grander....like I do with
 
 ---
 
+##### Note Type Views
+
+Split and create folder/files for each note view type.  Will blend creating a "note view" to pull in the appropriate "type" view.
+
 ##### User Auth
 
 Implemented simple User Auth with Slim's encrypted php session support.  Implemented a backbone modal login form [Backbone.Modal](http://awkward.github.io/backbone.modal/)  Only issue I see so far is that re-clicking the same URL/Route doesn't reload like a postback...as you're already on that route.
