@@ -35,8 +35,7 @@ notesApp.Routers = notesApp.Routers || {};
             var login = new notesApp.Views.LoginView();
             var loginEl = login.render().el;
             console.log('loginEl', loginEl);
-            $('.hero-unit').html(loginEl);
-            this.notloading();
+            $('.content-wrap').append(loginEl);
         },
         notloading: function() {
             $('.hero-unit').show();

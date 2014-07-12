@@ -18,7 +18,8 @@ notesApp.Views = notesApp.Views || {};
             this.listenTo(notesApp.notes, 'error', this.errorHandler);
         },
         events: {
-            'keypress #new-note-text': 'createOnEnter'
+            'keypress #new-note-text': 'createOnEnter',
+            'click .note-add': 'showNewNoteModal'
         },
         render: function() {
             console.log('Notes View::Render');
@@ -31,6 +32,7 @@ notesApp.Views = notesApp.Views || {};
                     console.log(data);
                     // this return the first found url data
                     self.quickNoteType = 'website';
+                    self.website = data;
                 }
             });
             this.$list = this.$('#notes-list');
@@ -50,17 +52,23 @@ notesApp.Views = notesApp.Views || {};
             });
             this.$list.append(noteView.render().el);
         },
+        website: {},
         quickNoteType: 'text',
         newAttributes: function() {
+            var title = this.website.url || "",
+                description = this.website.description || "";
             return {
-                "title": "",
+                "title": title,
                 "userid": "0001",
                 "text": this.$('#new-note-text').val().trim(),
+                "description": description,
                 "type": this.quickNoteType
             }
         },
         clearAttributes: function() {
             this.$('#new-note-text').val('');
+            this.website = {};
+            this.quickNoteType = 'text';
         },
         create: function() {
             // Must have at least some text.
@@ -77,6 +85,10 @@ notesApp.Views = notesApp.Views || {};
                 this.create();
                 this.render();
             }
+        },
+        showNewNoteModal: function() {
+            var addnote = new notesApp.Views.AddNoteView();
+            $('.hero-unit').append(addnote.render().el);
         },
         errorHandler: function(model, error) {
             console.log('Error in Collection', error);

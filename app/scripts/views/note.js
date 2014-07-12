@@ -24,7 +24,22 @@ notesApp.Views = notesApp.Views || {};
         render: function() {
             console.log('this.$el', this.$el);
             this.$el.html(this.template(this.model.toJSON()));
+            this.renderType();
             return this;
+        },
+        renderType: function() {
+            var nType = this.model.get('type'),
+                typeView;
+            if (nType === 'website') {
+                typeView = new notesApp.Views.NoteTypeURL({model: this.model});
+            } else if (nType === 'todo') {
+                typeView = new notesApp.Views.NoteTypeTodo({model: this.model});
+            } else {
+                // Default is text type
+                typeView = new notesApp.Views.NoteTypeText({model: this.model});
+            }
+            console.log('typeView',typeView);
+             this.$('.note-data').append(typeView.render().el);
         },
         clearAttributes: function() {
             this.$('.note-title.edit').val('');
@@ -49,8 +64,8 @@ notesApp.Views = notesApp.Views || {};
                         console.log(data);
                         // this return the first found url data
                         self.model.set('type', 'website');
-                        this.$('.note-title-edit').val(data.url);
-                        this.$('.note-text-edit').val(data.title);
+                        self.$('.note-title-edit').val(data.url);
+                        self.$('.note-text-edit').val(data.title);
                         self.model.set('description', data.description);
                     }
                 });

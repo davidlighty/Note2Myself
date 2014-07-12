@@ -13,8 +13,8 @@ body {
     margin-bottom: 0px;
     position: relative;
     border-radius: 55%;
-    width:120px;
-    height:120px;
+    width: 120px;
+    height: 120px;
 }
 .gl-scene canvas {
     border: none;
@@ -55,6 +55,14 @@ ul {
     margin: 0;
     padding: 0;
 }
+.notes-section {
+    position: relative;
+    z-index: 1000;
+}
+.quick-note-section {
+    position: relative;
+    z-index: 9000;
+}
 .quick-note-text {
     width: 100%;
     margin: 4.5px;
@@ -76,18 +84,18 @@ ul {
     display: inline-block;
 }
 .quick-note-text textarea {
-	transition: height 2s ease;
-	-moz-transition: height 2s ease;
-	-webkit-transition: height 2s ease;
+    transition: height 2s ease;
+    -moz-transition: height 2s ease;
+    -webkit-transition: height 2s ease;
     height: 10px;
     float: left;
     margin-left: 18px;
     width: 96%;
 }
-.quick-note-text:hover textarea{
-	transition: height 2s ease;
-	-moz-transition: height 2s ease;
-	-webkit-transition: height 2s ease;
+.quick-note-text:hover textarea {
+    transition: height 2s ease;
+    -moz-transition: height 2s ease;
+    -webkit-transition: height 2s ease;
 }
 .quick-note-text:hover textarea, .quick-note-text textarea:focus {
     color: #111;
@@ -165,7 +173,6 @@ ul {
     font-size: 11px;
     font-weight: bold;
     line-height: 20px;
-    color: #DDD;
     opacity: 0.6;
 }
 .note-card:hover .note-stats li {
@@ -177,7 +184,6 @@ ul {
 .note-stats li > * {
     display: inline-block;
     padding: 0 5px;
-    color: #DDD;
 }
 .note-stats li a .octicon {
     color: #888;
@@ -195,21 +201,25 @@ ul {
 .note-cmds {
     z-index: 4000;
     position: absolute;
-    bottom: -29px;
+    bottom: 4px;
     right: 0;
     width: 95%;
-    opacity: 0.5;
     margin: 5px;
 }
-.note-item:hover .note-cmds {
-    opacity: 0.8;
+.note-item:hover .note-cmds li {
+    opacity: 1;
 }
 .note-cmds .edit-note-cmds {
     float: right;
 }
+.note-cmds .edit-note-cmds li {
+    color: #444;
+    cursor: pointer;
+    font-size: 110%;
+}
 .note-cmds .edit-undo, .note-cmds .update-note {
     display: none;
 }
-.note-cmds .delete-note:hover{
-	color:red;
+.note-cmds .delete-note:hover {
+    color: red;
 }

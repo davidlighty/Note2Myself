@@ -1,1 +1,12 @@
 <!-- Website Template -->
+<div class="note-title-section">
+	<a href="<%= title %>" target="blank"> <h1 class="note-title"><%= title %></h1></small></a>
+    <input type="text" value="<%= title %>" class="note-title-edit" placeholder="Want a title? "/>
+</div>
+<div class="note-text-section">
+	<p><small>Description: <%= description %></small></p>
+    <p class="note-text">
+    <%= text %>
+    </p>
+    <textarea type="text" placeholder="What would you like to save?" class="note-text-edit"><%= text %></textarea>
+</div>

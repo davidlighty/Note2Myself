@@ -8,6 +8,7 @@ notesApp.Views = notesApp.Views || {};
     notesApp.Views.LoginView = Backbone.Modal.extend({
         template: JST['app/scripts/templates/login.ejs'],
         cancelEl: '.bbm-button',
+        submitEl:'#loginButton',
         events: {
             'click #loginButton': 'login'
         },

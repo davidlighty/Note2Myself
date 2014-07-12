@@ -44,7 +44,6 @@ function respondContent() {
     //$('.hero-unit').attr('width', $(window).width()); //max width
     wrapHeight -= 50; // Compensate for margin....
     wrapHeight = wrapHeight + 'px';
-    console.log('wrapHeight', wrapHeight);
     $('.content-wrap').css('height', wrapHeight); //max height
 }
 
