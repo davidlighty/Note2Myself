@@ -17,6 +17,9 @@ $.ajaxSetup({
 });
 
 window.notesApp = {
+    Title: 'NoteApp',
+    Author: 'David Lighty',
+    Description: 'Sample PHP API + BackboneJS note taking app.',
     Models: {},
     Collections: {},
     Views: {},
@@ -24,12 +27,13 @@ window.notesApp = {
     Routers: {},
     init: function() {
         'use strict';
-        console.log('Notes App Init');
+        console.log(this.Title + ':' + this.Author + ':' + this.Description);
         // Init a main event obj
         this.vent = _.extend({}, Backbone.Events);
         // Init the alert view which will catch/watch events
-        var alertView = new notesApp.Views.Alert();
-        console.log('alertView', alertView);
+        notesApp.alertView = new notesApp.Views.Alert();
+        // Init header + nav
+        notesApp.headernav = new notesApp.Views.HeaderNav();
         // Start Router
         Backbone.history.start();
     }
