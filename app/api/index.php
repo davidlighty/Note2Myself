@@ -30,6 +30,9 @@ $app = new Slim();
 $app->post('/login', 'login');
 $app->post('/forgot', 'forgotpw');
 
+// Bing photo
+$app->get('/bingphoto', 'bingphoto');
+
 /**
  * Routing
  *
@@ -261,6 +264,15 @@ function authorize($role = "user") {
 			$app->halt(401, 'You shall not pass!');
 		}
 	};
+}
+
+/**
+ * Get the Bing photo of the day
+ */
+function bingphoto() {
+	$bingjson = file_get_contents('http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1');
+	header("Content-Type: application/json");
+	echo $bingjson;
 }
 
 /**
