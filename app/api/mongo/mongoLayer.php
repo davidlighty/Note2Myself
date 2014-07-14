@@ -273,6 +273,8 @@ class MongoLayer {
 	 *      'field_name' => -1
 	 *    )
 	 *  );
+	 *
+	 * @uid if blank (admin role), get all?
 	 */
 	public static function getList($collection, $select = null) {
 
@@ -284,8 +286,6 @@ class MongoLayer {
 
 			$criteria = NULL;
 
-			// add exact match filters if they exist
-
 			if (isset($select['filter']) && count($select['filter'])) {
 				$criteria = $select['filter'];
 			}
@@ -296,6 +296,11 @@ class MongoLayer {
 				foreach ($select['wildcard'] as $key => $value) {
 					$criteria[$key] = new MongoRegex($value);
 				}
+			}
+
+			// lastly check and add uid filter
+			if (isset($select['userid'])) {
+				$criteria = $select['userid'];
 			}
 
 			// get results

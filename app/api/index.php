@@ -52,13 +52,16 @@ $app->delete('/:collection/:id', authorize('user'), '_delete');
  */
 
 function _list($collection) {
+	$uid    = $_SESSION['user']['_id'];
 	$select = array(
+		'userid' => $uid,
 		'limit'  => (isset($_GET['limit']))?$_GET['limit']:false,
 		'page'   => (isset($_GET['page']))?$_GET['page']:false,
 		'filter' => (isset($_GET['filter']))?$_GET['filter']:false,
 		'regex'  => (isset($_GET['regex']))?$_GET['regex']:false,
 		'sort'   => (isset($_GET['sort']))?$_GET['sort']:false
 	);
+
 	$data = MongoLayer::getList(
 		$collection,
 		$select
@@ -74,8 +77,9 @@ function _list($collection) {
  * Insert a new record into the db
  */
 function _create($collection) {
-	$document = json_decode(Slim::getInstance()->request()->getBody(), true);
-	$data     = MongoLayer::create(
+	$document           = json_decode(Slim::getInstance()->request()->getBody(), true);
+	$document['userid'] = $_SESSION['user']['_id'];
+	$data               = MongoLayer::create(
 		$collection,
 		$document
 	);
@@ -92,6 +96,7 @@ function _create($collection) {
 function _read($collection, $id) {
 	$data = MongoLayer::read(
 		$collection,
+		$uid,
 		$id
 	);
 	header("Content-Type: application/json");
@@ -192,6 +197,7 @@ function login() {
 			$user = MongoLayer::validateUser('users', $document);
 			if (!is_null($user)) {
 				$_SESSION['user'] = $user;
+				unset($user['password']);
 				header("Content-Type: application/json");
 				echo json_encode($user);
 			} else {
@@ -218,6 +224,7 @@ function register($user) {
 			$newUser
 		);
 		$_SESSION['user'] = $data;
+		unset($data['password']);
 		header("Content-Type: application/json");
 		echo json_encode($data);
 		exit;

@@ -6,7 +6,10 @@ notesApp.Models = notesApp.Models || {};
         urlRoot: 'api/notes',
         idAttribute: '_id', // Mongo id attribute
         defaults: {
+            "title":"",
             "description": "",
+            "text":"",
+            "type":"text",
             "created": Date()
         },
         initialize: function() {

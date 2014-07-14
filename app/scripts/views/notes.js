@@ -1,4 +1,4 @@
-/*global notesApp, Backbone, JST*/
+/*global notesApp, Backbone, JST,ENTER_KEY*/
 notesApp.Views = notesApp.Views || {};
 (function() {
     'use strict';
@@ -59,11 +59,10 @@ notesApp.Views = notesApp.Views || {};
                 description = this.website.description || "";
             return {
                 "title": title,
-                "userid": "0001",
                 "text": this.$('#new-note-text').val().trim(),
                 "description": description,
                 "type": this.quickNoteType
-            }
+            };
         },
         clearAttributes: function() {
             this.$('#new-note-text').val('');
@@ -72,7 +71,7 @@ notesApp.Views = notesApp.Views || {};
         },
         create: function() {
             // Must have at least some text.
-            if (this.$('#new-note-text').val().trim()) {
+            if (this.$input.val().trim()) {
                 console.log('Save new note');
                 notesApp.notes.create(this.newAttributes());
                 this.clearAttributes();
@@ -81,7 +80,7 @@ notesApp.Views = notesApp.Views || {};
         createOnEnter: function(e) {
             // New model, and save.
             if (e.which === ENTER_KEY && this.$input.val().trim()) {
-                console.log('Save new note');
+                console.log('Save new note : ENTER_KEY');
                 this.create();
                 this.render();
             }

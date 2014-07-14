@@ -10,11 +10,17 @@ notesApp.Models = notesApp.Models || {};
             "loggedIn":false
         },
         initialize: function() {
-            console.log('Notes Model :: Init', this.url);
+            console.log('User Model :: Init', this.url);
         },
         parse: function(data) {
             console.log('data', data);
             return data;
+        },
+        isAuthorized:function(){
+
+        },
+        checkUser:function(){
+            
         }
     });
 })();
