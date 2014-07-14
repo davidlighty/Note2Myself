@@ -37,6 +37,9 @@ window.notesApp = {
         // Set our background and page footer || cop out here...should be a view/template.
         console.log('footer');
         $('.copy').html('<small>&copy; ' + this.Author + '</small>');
+        // Init notes view
+        notesApp.notesView = new notesApp.Views.Notes();
+
         // Start Router
         Backbone.history.start();
     }

@@ -1,22 +1,23 @@
 <div class="bbm-modal__topbar">
-    <h3 class="bbm-modal__title">Create Note</h3>
+    <h3 class="bbm-modal__title">Need to make a list?</h3>
 </div>
 <div class="bbm-modal__section">
     <div class="alert alert-error" style="display:none;">
     </div>
     <form class="form-horizontal" id="login-form">
         <section>
-        	<h4>Type</h4>
+            <input type="text" placeholder="Title" id="new-note-title"  autofocus/>
         </section>
         <section>
-            <input type="text" placeholder="Title" id="new-note-title"/>
+        <div class="input-group">
+            <input type="text" placeholder="What needs to be done?" id="new-note-todo" class="form-control" />
+            <span id="add-todo-item" class="input-group-addon"><i class="fa fa-plus fa-2"></i></span>
+        </div>
         </section>
-        <section>
-            <textarea type="text" placeholder="What would you like to save?" id="new-note-text"></textarea>
-        </section>
+        <div id="new-todo-list">            </div>
     </form>
 </div>
 <div class="bbm-modal__bottombar">
-<button type="submit" class="btn" id="addButton" form="login-form">Add</button>
+    <button type="submit" class="btn btn-primary" id="addButton" form="login-form" disabled>Add</button>
     <a href="#" class="bbm-button">Close</a>
 </div>

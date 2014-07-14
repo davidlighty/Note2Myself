@@ -7,19 +7,22 @@ notesApp.Views = notesApp.Views || {};
         template: JST['app/scripts/templates/notes.ejs'],
         initialize: function() {
             console.log('Notes View :: Init');
-            var self = this;
+            this.listenTo(notesApp.notes, 'error', this.errorHandler);
+            this.listenTo(notesApp.notes, 'change', this.render);
+        },
+        events: {
+            'keypress #new-note-text': 'createOnEnter',
+            'click .note-add': 'showNewNoteModal'
+        },
+        initfetch: function() {
             // Don't call render until our xhr is finished
+            var self = this;
             notesApp.notes.fetch({
                 add: true
             }).done(function() {
                 console.log('initialize fetch finished');
                 self.render();
             });
-            this.listenTo(notesApp.notes, 'error', this.errorHandler);
-        },
-        events: {
-            'keypress #new-note-text': 'createOnEnter',
-            'click .note-add': 'showNewNoteModal'
         },
         render: function() {
             console.log('Notes View::Render');
@@ -96,4 +99,7 @@ notesApp.Views = notesApp.Views || {};
             notesApp.vent.trigger('error:event', error);
         }
     });
+
+    //Init View
+    //notesApp.notesView = new notesApp.Views.Notes();
 })();

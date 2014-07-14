@@ -1,15 +1,12 @@
 <div class="bbm-modal__topbar">
-    <h3 class="bbm-modal__title">Create Note</h3>
+    <h3 class="bbm-modal__title">Save Website Link</h3>
 </div>
 <div class="bbm-modal__section">
     <div class="alert alert-error" style="display:none;">
     </div>
     <form class="form-horizontal" id="login-form">
         <section>
-        	<h4>Type</h4>
-        </section>
-        <section>
-            <input type="text" placeholder="Title" id="new-note-title"/>
+            <input type="text" placeholder="Website" id="new-note-title" autofocus/>
         </section>
         <section>
             <textarea type="text" placeholder="What would you like to save?" id="new-note-text"></textarea>
@@ -17,6 +14,6 @@
     </form>
 </div>
 <div class="bbm-modal__bottombar">
-<button type="submit" class="btn" id="addButton" form="login-form">Add</button>
+<button type="submit" class="btn btn-primary" id="addButton" form="login-form" disabled>Add</button>
     <a href="#" class="bbm-button">Close</a>
 </div>
