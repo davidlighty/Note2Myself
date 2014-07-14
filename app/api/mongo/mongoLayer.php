@@ -300,7 +300,7 @@ class MongoLayer {
 
 			// lastly check and add uid filter
 			if (isset($select['userid'])) {
-				$criteria = $select['userid'];
+				$criteria['userid'] = $select['userid'];
 			}
 
 			// get results
@@ -348,9 +348,10 @@ class MongoLayer {
 			// prepare results to be returned
 
 			$output = array(
-				'total'   => $cursor->count(),
-				'pages'   => ceil($cursor->count()/$limit),
-				'results' => array(),
+				'total'    => $cursor->count(),
+				'pages'    => ceil($cursor->count()/$limit),
+				'criteria' => $criteria,
+				'results'  => array(),
 			);
 
 			foreach ($cursor as $result) {
