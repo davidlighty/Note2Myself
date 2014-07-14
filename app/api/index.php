@@ -26,6 +26,10 @@ use Slim\Slim;
 Slim::registerAutoloader();
 $app = new Slim();
 
+// Login Route
+$app->post('/login', 'login');
+$app->post('/forgot', 'forgotpw');
+
 /**
  * Routing
  *
@@ -33,9 +37,6 @@ $app = new Slim();
  * Those routes that require authentication add the 'authenticate' as a middleware option
  *   ==>  (route,middleware,function)
  */
-
-// Login Route
-$app->post('/login', 'login');
 
 // Notes Routes
 $app->get('/:collection', authorize('user'), '_list');
@@ -137,6 +138,48 @@ function _delete($collection, $id) {
  */
 
 /**
+ *	Validate email and send email
+ */
+function forgotpw() {
+	$document = json_decode(Slim::getInstance()->request()->getBody(), true);
+	if (!empty($document['email']) && !is_null(MongoLayer::findOne('users', array('email' => $document['email'])))) {
+		// Valid user...
+		$user = MongoLayer::findOne('users', array('email' => $user['email']));
+		// The message
+		// message
+		$message = '
+					<html>
+					<head>
+					  <title>NoteApp Password Recovery</title>
+					</head>
+					<body>
+					  <p>Here is your password: '.$user['password'].'</p>
+					</body>
+					</html>
+					';
+
+		// Send
+		$headers = 'MIME-Version: 1.0'."\r\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1'."\r\n";
+		$headers .= 'To:'.$user['email']."\r\n";
+		$headers .= 'From: NoteApp <pwrecovery@noteapp.com>'."\r\n";
+
+		$to .= $user['email'];
+
+		// subject
+		$subject = 'NoteApp Password Recovery Email';
+
+		// Mail it
+		mail($to, $subject, $message, $headers);
+		header("Content-Type: application/json");
+		echo '{"success":{"text":"Email sent."}}';
+	} else {
+		header("Content-Type: application/json");
+		echo '{"error":{"text":"Incorrect email or user does not exist."}}';
+	}
+}
+
+/**
  * Quick and dirty login function
  */
 function login() {
@@ -149,12 +192,15 @@ function login() {
 			$user = MongoLayer::validateUser('users', $document);
 			if (!is_null($user)) {
 				$_SESSION['user'] = $user;
+				header("Content-Type: application/json");
 				echo json_encode($user);
 			} else {
+				header("Content-Type: application/json");
 				echo '{"error":{"text":"Password incorrect or User does not exist."}}';
 			}
 		}
 	} else {
+		header("Content-Type: application/json");
 		echo '{"error":{"text":"Username and Password are required."}}';
 	}
 }
@@ -176,6 +222,7 @@ function register($user) {
 		echo json_encode($data);
 		exit;
 	} else {
+		header("Content-Type: application/json");
 		echo '{"error":{"text":"Email address already in use."}}';
 	}
 
@@ -207,16 +254,6 @@ function authorize($role = "user") {
 			$app->halt(401, 'You shall not pass!');
 		}
 	};
-}
-
-/**
- * validateUserKey
- *
- * Main validation function
- */
-function validateUserKey($uid, $key) {
-	// insert your (hopefully complex) validation routine here
-	return false;// Allow for none
 }
 
 /**

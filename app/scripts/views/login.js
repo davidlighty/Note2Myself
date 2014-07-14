@@ -7,16 +7,27 @@ notesApp.Views = notesApp.Views || {};
     notesApp.Views.LoginView = Backbone.Modal.extend({
         template: JST['app/scripts/templates/login.ejs'],
         cancelEl: '.bbm-button',
-        //submitEl: '#loginButton',
         events: {
             'click #loginButton':'login',
             'click #registerButton':'register',
-            'click .forgotpassword': 'forgotpassword',
+            'click #forgotpassword': 'forgotpassword',
             'click .close-login': 'gohome'
         },
         beforeSubmit: function() {
             console.log('beforeSubmit');
             return this.$('#login-form')[0].checkValidity();
+        },
+        forgotpassword:function(){
+            console.log('forgot password');
+            var self=this;
+            $.post('./api/forgot',JSON.stringify({ "email" : this.$('#inputEmail').val() }), 
+                function(data) {
+                    console.log('data',data);
+                self.$('.alert-error').html(data.error.text).show();
+            }, 'json').error(function(){
+                console.log('failed');
+                self.$('.alert-error').html('Failed to send email, internal error.').show();
+            });
         },
         login: function() {
             $('.alert-error').hide(); // Hide any errors on a new submit
@@ -74,9 +85,6 @@ notesApp.Views = notesApp.Views || {};
                 }
             });
         },
-        // close:function(){
-        //     console.log('Close modal');
-        // },
         beforeCancel: function() {
             console.log('Login Cancel');
             // Show a required alert.
