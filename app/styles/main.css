@@ -57,11 +57,9 @@ ul {
 }
 .notes-section {
     position: relative;
-    z-index: 1000;
 }
 .quick-note-section {
     position: relative;
-    z-index: 9000;
 }
 .quick-note-text {
     width: 100%;
@@ -199,7 +197,7 @@ ul {
 */
 
 .note-cmds {
-    z-index: 4000;
+    z-index: 400;
     position: absolute;
     bottom: 4px;
     right: 0;

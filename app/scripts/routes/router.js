@@ -4,7 +4,7 @@ notesApp.Routers = notesApp.Routers || {};
     'use strict';
     notesApp.Routers.Router = Backbone.Router.extend({
         routes: {
-            '': 'home',
+            '': 'notes',
             'notes': 'notes',
             'login': 'login'
         },

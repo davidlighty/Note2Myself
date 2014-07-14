@@ -4,22 +4,32 @@
 <div class="bbm-modal__section">
     <div class="alert alert-error" style="display:none;">
     </div>
-    <form class="form-horizontal" id="login-form">
-        <div class="control-group">
-            <label class="control-label" for="inputEmail">Email</label>
-            <div class="controls">
-                <input type="text" id="inputEmail" placeholder="Email">
+    <ul>
+        <li>
+            <div>
+                <!-- login form -->
+                <form class="form-horizontal" id="login-form">
+                    <div class="control-group">
+                        <label class="control-label" for="inputEmail">Email</label>
+                        <div class="controls">
+                            <input type="email" id="inputEmail" placeholder="Email" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputPassword">Password</label>
+                        <div class="controls">
+                            <input type="text" id="inputPassword" placeholder="Password" class="form-control" required>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inputPassword">Password</label>
-            <div class="controls">
-                <input type="text" id="inputPassword" placeholder="Password">
+            <div>
+                <a href="#/forgotpassword">Forgot your password?</a>
             </div>
-        </div>
-    </form>
+        </li>
+    </ul>
 </div>
 <div class="bbm-modal__bottombar">
-<button type="submit" class="btn" id="loginButton" form="login-form">Sign in</button>
-    <a href="#" class="bbm-button">Close</a>
+    <button type="submit" class="btn" id="registerButton" form="login-form">Register</button>
+    <button type="submit" class="btn btn-primary" id="loginButton" form="login-form">Sign in</button>
 </div>

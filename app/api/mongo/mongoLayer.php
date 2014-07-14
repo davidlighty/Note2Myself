@@ -156,6 +156,83 @@ class MongoLayer {
 	}
 
 	/**
+	 * Find single instance
+	 */
+	public static function findOne($collection, $criteria) {
+		try {
+			$conn       = new MongoClient();
+			$_db        = $conn->{self::DB_NAME};
+			$collection = $_db->{ $collection};
+
+			$document = $collection->findOne(
+				$criteria
+			);
+
+			$conn->close();
+
+			return $document;
+
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
+	}
+
+	/**
+	 * Find all instances
+	 */
+	public static function find($collection, $criteria) {
+		try {
+			$conn       = new MongoClient();
+			$_db        = $conn->{self::DB_NAME};
+			$collection = $_db->{ $collection};
+
+			$document = $collection->find(
+				$criteria
+			);
+
+			$conn->close();
+
+			return $document;
+
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
+	}
+
+	/**
+	 * Validate User
+	 */
+	public static function validateUser($collection, $user) {
+		try {
+			$conn       = new MongoClient();
+			$_db        = $conn->{self::DB_NAME};
+			$collection = $_db->{ $collection};
+
+			$criteria = array(
+				'email'    => $user['email'],
+				'password' => $user['password']
+			);
+
+			$document = $collection->findOne(
+				$criteria
+			);
+
+			$conn->close();
+
+			return $document;
+
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
+	}
+
+	/**
 	 * Collection count
 	 */
 	public static function collectionCount($collection, $query = null) {

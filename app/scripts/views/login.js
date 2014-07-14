@@ -1,5 +1,4 @@
 /*global notesApp, Backbone, JST*/
-
 // Login View using the Backbone.Modal class from /vendor/backbone.modal.js 
 // https://github.com/awkward/backbone.modal
 notesApp.Views = notesApp.Views || {};
@@ -8,34 +7,82 @@ notesApp.Views = notesApp.Views || {};
     notesApp.Views.LoginView = Backbone.Modal.extend({
         template: JST['app/scripts/templates/login.ejs'],
         cancelEl: '.bbm-button',
-        submitEl:'#loginButton',
+        //submitEl: '#loginButton',
         events: {
-            'click #loginButton': 'login'
+            'click #loginButton':'login',
+            'click #registerButton':'register',
+            'click .forgotpassword': 'forgotpassword',
+            'click .close-login': 'gohome'
         },
-        login: function(event) {
-            event.preventDefault(); // Don't let this button submit the form
+        beforeSubmit: function() {
+            console.log('beforeSubmit');
+            return this.$('#login-form')[0].checkValidity();
+        },
+        login: function() {
             $('.alert-error').hide(); // Hide any errors on a new submit
-            var url = './api/login';
+            var self = this;
             console.log('Loggin in... ');
-            var formValues = {
+            notesApp.currentUser = new notesApp.Models.User();
+            notesApp.currentUser.save({
                 email: this.$('#inputEmail').val(),
                 password: this.$('#inputPassword').val()
-            };
-            $.ajax({
-                url: url,
-                type: 'POST',
-                dataType: 'json',
-                data: formValues,
-                success: function(data) {
-                    console.log(['Login request details: ', data]);
-                    if (data.error) { // If there is an error, show the error messages
-                        $('.alert-error').text(data.error.text).show();
-                    } else { // If not, send them back to the home page
+            }, {
+                success: function(model, data) {
+                    console.log('login response', data);
+                    if (data.error) {
+                        // Error.
+                        console.log('error', self);
+                        //var loginEl = self.render().el;
+                        self.$('.alert-error').html(data.error.text).show();
+                    } else {
+                        console.log('success');
+                        notesApp.currentUser.loggedIn = true;
+                        self.close();
                         notesApp.router.navigate('#/');
-                        notesApp.User = data;
                     }
+                },
+                error: function(model, data) {
+                    console.log('data', data);
                 }
             });
+        },
+        register:function(){
+            console.log('register');
+            var self = this;
+            notesApp.currentUser = new notesApp.Models.User();
+            notesApp.currentUser.save({
+                email: this.$('#inputEmail').val(),
+                password: this.$('#inputPassword').val(),
+                register: true
+            }, {
+                success: function(model, data) {
+                    console.log('login response', data);
+                    if (data.error) {
+                        // Error.
+                        console.log('error', self);
+                        //var loginEl = self.render().el;
+                        self.$('.alert-error').html(data.error.text).show();
+                    } else {
+                        console.log('success');
+                        notesApp.currentUser.loggedIn = true;
+                        self.close();
+                        notesApp.router.navigate('#/');
+                    }
+                },
+                error: function(model, data) {
+                    console.log('data', data);
+                }
+            });
+        },
+        // close:function(){
+        //     console.log('Close modal');
+        // },
+        beforeCancel: function() {
+            console.log('Login Cancel');
+            // Show a required alert.
+            // alert-error
+            $('.alert-error').text('Please sign-up or register.').show();
+            return false;
         }
     });
 })();

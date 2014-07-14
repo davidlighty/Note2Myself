@@ -137,23 +137,48 @@ function _delete($collection, $id) {
  */
 
 /**
- * Quick and dirty login function with hard coded credentials (admin/admin)
- * This is just an example. Do not use this in a production environment
+ * Quick and dirty login function
  */
 function login() {
-	if (!empty($_POST['email']) && !empty($_POST['password'])) {
-		// normally you would load credentials from a database.
-		// This is just an example and is certainly not secure
-		if ($_POST['email'] == 'admin' && $_POST['password'] == 'admin') {
-			$user             = array("email" => "admin", "firstName" => "Clint", "lastName" => "Berry", "role" => "user");
-			$_SESSION['user'] = $user;
-			echo json_encode($user);
+	$document = json_decode(Slim::getInstance()->request()->getBody(), true);
+	if (!empty($document['email']) && !empty($document['password'])) {
+		if ($document['register']) {
+			register($document);
+			exit;
 		} else {
-			echo '{"error":{"text":"You shall not pass..."}}';
+			$user = MongoLayer::validateUser('users', $document);
+			if (!is_null($user)) {
+				$_SESSION['user'] = $user;
+				echo json_encode($user);
+			} else {
+				echo '{"error":{"text":"Password incorrect or User does not exist."}}';
+			}
 		}
 	} else {
 		echo '{"error":{"text":"Username and Password are required."}}';
 	}
+}
+
+function register($user) {
+	$isUser = MongoLayer::findOne('users', array('email' => $user['email']));
+	if (is_null($isUser)) {
+		$newUser = array(
+			'email'    => $user['email'],
+			'password' => $user['password'],
+			'role'     => 'user'
+		);
+		$data = MongoLayer::create(
+			'users',
+			$newUser
+		);
+		$_SESSION['user'] = $data;
+		header("Content-Type: application/json");
+		echo json_encode($data);
+		exit;
+	} else {
+		echo '{"error":{"text":"Email address already in use."}}';
+	}
+
 }
 
 /**
