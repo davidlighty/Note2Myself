@@ -5,6 +5,7 @@ notesApp.Models = notesApp.Models || {};
     notesApp.Models.Background = Backbone.Model.extend({
         defaults: {
             'photoURL': '',
+            'photoCopy': '',
             'photoDesc': ''
         },
         initialize: function() {
@@ -33,6 +34,11 @@ notesApp.Models = notesApp.Models || {};
                 var image = json.images[0];
                 console.log('image data', image);
                 self.set('photoURL', 'http://www.bing.com' + image.url);
+                self.set('photoCopy', image.copyright);
+                self.set('photoDesc', image.hs.desc);
+                // set a nice background Bing photo of the day.
+                $('.content-wrap').css('background-image', 'url(' + notesApp.background.get('photoURL') + ')');
+                $('.img-info').html('<small>Bing Image: &copy; ' + notesApp.background.get('photoCopy') + '</small>');
             });
 
         }

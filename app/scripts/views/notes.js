@@ -44,12 +44,6 @@ notesApp.Views = notesApp.Views || {};
             // Tooltips
             this.$('.quick-note-text').tooltip();
 
-            console.log('background?', notesApp.background);
-            if (notesApp.background) {
-                // set a nice background Bing photo of the day.
-                $('.content-wrap').css('background-image', 'url(' + notesApp.background.get('photoURL') + ')');
-            }
-
             return this;
         },
         renderNote: function(note) {

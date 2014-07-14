@@ -6,6 +6,10 @@ notesApp.Routers = notesApp.Routers || {};
         routes: {
             '': 'notes',
             'notes': 'notes',
+            'note/text': 'textnote',
+            'note/web': 'webnote',
+            'note/todo': 'todonote',
+            'note/img': 'imgnote',
             'login': 'login',
             'logout': 'logout'
         },
@@ -18,6 +22,18 @@ notesApp.Routers = notesApp.Routers || {};
             // Init the main notes view
             var notesView = new notesApp.Views.Notes();
             console.log('notesView', notesView);
+        },
+        textnote: function() {
+            console.log('New Text Note');
+        },
+        webnote: function() {
+            console.log('New Web Note');
+        },
+        todonote: function() {
+            console.log('New Todo Note');
+        },
+        imgnote: function() {
+            console.log('New Image Note');
         },
         login: function() {
             // open the login modal view

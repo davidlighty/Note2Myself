@@ -34,6 +34,9 @@ window.notesApp = {
         notesApp.alertView = new notesApp.Views.Alert();
         // Init header + nav
         notesApp.headernav = new notesApp.Views.HeaderNav();
+        // Set our background and page footer || cop out here...should be a view/template.
+        console.log('footer');
+        $('.copy').html('<small>&copy; ' + this.Author + '</small>');
         // Start Router
         Backbone.history.start();
     }
