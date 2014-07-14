@@ -6,8 +6,8 @@ notesApp.Models = notesApp.Models || {};
         urlRoot: 'api/login',
         idAttribute: '_id', // Mongo id attribute
         defaults: {
-            "email":"",
-            "loggedIn":false
+            "email": "",
+            "loggedIn": false
         },
         initialize: function() {
             console.log('User Model :: Init', this.url);
@@ -16,11 +16,11 @@ notesApp.Models = notesApp.Models || {};
             console.log('data', data);
             return data;
         },
-        isAuthorized:function(){
-
-        },
-        checkUser:function(){
-            
+        logout: function() {
+            console.log('Logout this session');
+            $.post('./api/logout', function(data) {
+                notesApp.router.navigate('#/');
+            });
         }
     });
 })();

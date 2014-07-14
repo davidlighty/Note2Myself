@@ -29,6 +29,7 @@ $app = new Slim();
 // Login Route
 $app->post('/login', 'login');
 $app->post('/forgot', 'forgotpw');
+$app->post('/logout', 'logout');
 
 // Bing photo
 $app->get('/bingphoto', 'bingphoto');
@@ -212,6 +213,16 @@ function login() {
 		header("Content-Type: application/json");
 		echo '{"error":{"text":"Username and Password are required."}}';
 	}
+}
+
+/**
+ * Reset our session.
+ */
+function logout() {
+	$_SESSION = array();
+	session_destroy();
+	header("Content-Type: application/json");
+	echo '{"success":{"text":"Session Removed."}}';
 }
 
 function register($user) {

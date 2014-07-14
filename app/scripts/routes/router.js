@@ -6,21 +6,11 @@ notesApp.Routers = notesApp.Routers || {};
         routes: {
             '': 'notes',
             'notes': 'notes',
-            'login': 'login'
+            'login': 'login',
+            'logout': 'logout'
         },
         initialize: function() {
             console.log('Router Init');
-        },
-        home: function() {
-            console.log('Router:Home');
-            if (notesApp.User) {
-                // Notes
-                this.notes();
-            } else {
-                // Home
-                var homeView = new notesApp.Views.Home();
-                this.notloading();
-            }
         },
         notes: function() {
             console.log('Router:Notes');
@@ -36,6 +26,12 @@ notesApp.Routers = notesApp.Routers || {};
             var loginEl = login.render().el;
             console.log('loginEl', loginEl);
             $('.content-wrap').append(loginEl);
+        },
+        logout: function() {
+            console.log('Logout!');
+            this.isloading();
+            notesApp.currentUser = new notesApp.Models.User();
+            notesApp.currentUser.logout();
         },
         notloading: function() {
             $('.hero-unit').show();
