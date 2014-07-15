@@ -204,17 +204,16 @@ class MongoLayer {
 	}
 
 	/**
-	 * Validate User
+	 * Find User By Email
 	 */
-	public static function validateUser($collection, $user) {
+	public static function findUserByEmail($collection, $user) {
 		try {
 			$conn       = new MongoClient();
 			$_db        = $conn->{self::DB_NAME};
 			$collection = $_db->{ $collection};
 
 			$criteria = array(
-				'email'    => $user['email'],
-				'password' => $user['password']
+				'email'    => $user['email']
 			);
 
 			$document = $collection->findOne(

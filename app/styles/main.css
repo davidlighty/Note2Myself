@@ -14,7 +14,9 @@ footer {
     padding: 5px 10px;
     color: #ddd;
     width: 100%;
-    background: rgba(0, 0, 0, 0.5);
+}
+footer,.bbm-modal__bottombar{
+    background: rgba(0, 22, 55, 0.6);
 }
 .copy {
     float: left;
@@ -318,6 +320,7 @@ ul {
     background: #e3ebc3;
     background: rgba(0, 22, 55, .6);
 }
+
 #new-todo-list {
     padding: 6px;
 }

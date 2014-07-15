@@ -21,10 +21,20 @@ use noteAppApi\MongoLayer;
 use Slim\Slim;
 
 /**
+* Constants for the app
+*/
+define('MIN_PHP', '5.5');
+
+/**
  * Create API App
  */
 Slim::registerAutoloader();
 $app = new Slim();
+
+$app->config(array(
+   'templates.path' =>   './templates'
+   ));
+
 
 // Login Route
 $app->post('/login', 'login');
@@ -184,6 +194,8 @@ function forgotpw() {
 	if (!empty($document['email']) && !is_null(MongoLayer::findOne('users', array('email' => $document['email'])))) {
 		// Valid user...
 		$user = MongoLayer::findOne('users', array('email' => $user['email']));
+		$newPass = generatePW();
+		$user['password'] = password_hash($newPass,PASSWORD_DEFAULT);
 		// The message
 		// message
 		$message = '
@@ -192,7 +204,8 @@ function forgotpw() {
 					  <title>NoteApp Password Recovery</title>
 					</head>
 					<body>
-					  <p>Here is your password: '.$user['password'].'</p>
+						<p>There was a request for password recovery</p>
+					 	<p>Here is your password: '.$newPass.'</p>
 					</body>
 					</html>
 					';
@@ -219,28 +232,41 @@ function forgotpw() {
 }
 
 /**
+* Generate a random password
+*/
+function generatePW(){
+	return base_convert(rand(78364164096, 2821109907455), 10, 36);
+}
+
+/**
  * Quick and dirty login function
  */
 function login() {
+	header("Content-Type: application/json");
 	$document = json_decode(Slim::getInstance()->request()->getBody(), true);
 	if (!empty($document['email']) && !empty($document['password'])) {
 		if ($document['register']) {
 			register($document);
 			exit;
 		} else {
-			$user = MongoLayer::validateUser('users', $document);
+			$user = MongoLayer::findUserByEmail('users', $document);
 			if (!is_null($user)) {
+				if (password_verify($document['password'],$user['password'])) {
 				$_SESSION['user'] = $user;
+				$_SESSION['attempts'] = 0;
 				unset($user['password']);
-				header("Content-Type: application/json");
 				echo json_encode($user);
+			}else{
+				// Bad Password
+				$_SESSION['attempts']+=1;
+				echo '{"error":{"text":"Incorrect password."}}';
+			}
 			} else {
-				header("Content-Type: application/json");
+				$_SESSION['attempts']+=1;
 				echo '{"error":{"text":"Password incorrect or User does not exist."}}';
 			}
 		}
 	} else {
-		header("Content-Type: application/json");
 		echo '{"error":{"text":"Username and Password are required."}}';
 	}
 }
@@ -258,6 +284,8 @@ function logout() {
 function register($user) {
 	$isUser = MongoLayer::findOne('users', array('email' => $user['email']));
 	if (is_null($isUser)) {
+		// Hash password using php 5.5 functions (http://php.net/manual/en/function.password-hash.php)
+		$user['password'] = password_hash($user['password'],PASSWORD_DEFAULT);
 		$newUser = array(
 			'email'    => $user['email'],
 			'password' => $user['password'],
@@ -309,6 +337,8 @@ function authorize($role = "user") {
 
 /**
  * Get the Bing photo of the day
+ *
+ * Reads the RSS feed in JSON and passes this down. To be used as "wallpaper" for the website.
  */
 function bingphoto() {
 	$bingjson = file_get_contents('http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1');
@@ -317,6 +347,22 @@ function bingphoto() {
 }
 
 /**
+*
+*/
+function verifyPHPFailIfNessecary(){
+	$ver=phpversion();
+	if (version_compare(phpversion(), MIN_PHP, '<')) {
+		die('Requires PHP 5.5');
+	}
+
+	return true;
+}
+
+/**
  * Start Api app
+ * 
+ * Verify our PHP version before we spin up.
  */
-$app->run();
+if(verifyPHPFailIfNessecary()){
+	$app->run();
+}
