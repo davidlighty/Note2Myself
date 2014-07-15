@@ -229,8 +229,14 @@ ul {
     width: 95%;
     margin: 5px;
 }
-.note-item:hover .note-cmds li {
-    opacity: 1;
+.note-item .note-cmds .edit-note-cmds {
+    opacity: 0.2;
+}
+.note-item:hover .note-cmds .edit-note-cmds {
+    opacity: 0.4;
+}
+.note-item:hover .note-cmds .edit-note-cmds li:hover {
+    opacity: 0.9;
 }
 .note-cmds .edit-note-cmds {
     float: right;
@@ -301,6 +307,14 @@ ul {
     margin-bottom: 2px;
     width: 100%;
 }
+.bbm-modal .input-group-addon {
+    color: #EEE;
+    background: #e3ebc3;
+    background: rgba(0, 22, 55, .6);
+}
 #new-todo-list {
     padding: 6px;
+}
+ul.note-items li {
+    padding-left: 5px;
 }
