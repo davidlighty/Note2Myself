@@ -279,16 +279,15 @@ function login() {
 				}else{
 					// Bad Password
 					$_SESSION['attempts']+=1;
-					if($_SESSION['attempts']==3){
+					if($_SESSION['attempts']>=3){
 						// Lock out.
-
+						echo '{"error":{"code":"225","text":"Account Locked."}}';
 					}else{
 						echo '{"error":{"code":"220","text":"Incorrect password.","attempts":"'. $_SESSION['attempts'] .'"}}';
 					}
 					
 				}
 			} else {
-				$_SESSION['attempts']+=1;
 				echo '{"error":{"code":"200","text":"User does not exist."}}';
 			}
 		}
@@ -353,6 +352,7 @@ function authorize($role = "user") {
 			if ($_SESSION['user']['role'] == $role ||
 				$_SESSION['user']['role'] == 'admin') {
 				//User is logged in and has the correct permissions... Nice!
+				$_SESSION['access'] = time();
 				return true;
 			} else {
 				// If a user is logged in, but doesn't have permissions, return 403
@@ -374,6 +374,12 @@ function authorizeSession(){
 	global $aip,$bip,$agent;	
 	// Get the Slim framework object
 	$app = Slim::getInstance();
+	$lastAccess = (time() - $_SESSION['access']) * 60;
+	if($lastAccess >= 20){
+		// Too long. Expired
+		logout();
+		return false;
+	}
 	// Do this every time the client makes a request to the server, after authenticating
 	$ident = hash("sha256", $aip . $bip . $agent);
 	if ($ident != $_SESSION['ident'])

@@ -8,8 +8,8 @@ notesApp.Views = notesApp.Views || {};
         template: JST['app/scripts/templates/login.ejs'],
         cancelEl: '.bbm-button',
         events: {
-            'click #loginButton':'login',
-            'click #registerButton':'register',
+            'click #loginButton': 'login',
+            'click #registerButton': 'register',
             'click #forgotpassword': 'forgotpassword',
             'click .close-login': 'gohome'
         },
@@ -17,14 +17,16 @@ notesApp.Views = notesApp.Views || {};
             console.log('beforeSubmit');
             return this.$('#login-form')[0].checkValidity();
         },
-        forgotpassword:function(){
+        forgotpassword: function() {
             console.log('forgot password');
-            var self=this;
-            $.post('./api/forgot',JSON.stringify({ "email" : this.$('#inputEmail').val() }), 
+            var self = this;
+            $.post('./api/forgot', JSON.stringify({
+                    "email": this.$('#inputEmail').val()
+                }),
                 function(data) {
-                    console.log('data',data);
-                self.$('.alert-error').html(data.error.text).show();
-            }, 'json').error(function(){
+                    console.log('data', data);
+                    self.$('.alert-error').html(data.error.text).show();
+                }, 'json').error(function() {
                 console.log('failed');
                 self.$('.alert-error').html('Failed to send email, internal error.').show();
             });
@@ -43,6 +45,17 @@ notesApp.Views = notesApp.Views || {};
                     if (data.error) {
                         // Error.
                         console.log('error', self);
+                        if (data.error.code == '225') {
+                            // Locked
+                            self.$('*').prop('disabled', true);
+                        } else if (data.error.code == '220') {
+                            // Incorrect Password
+                            self.$('#inputPassword').addClass('invalid');
+                        } else if (data.error.code == '200') {
+
+                        } else {
+
+                        }
                         //var loginEl = self.render().el;
                         self.$('.alert-error').html(data.error.text).show();
                     } else {
@@ -57,7 +70,7 @@ notesApp.Views = notesApp.Views || {};
                 }
             });
         },
-        register:function(){
+        register: function() {
             console.log('register');
             var self = this;
             notesApp.currentUser = new notesApp.Models.User();
