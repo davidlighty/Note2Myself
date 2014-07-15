@@ -34,6 +34,9 @@ $app->post('/logout', 'logout');
 // Bing photo
 $app->get('/bingphoto', 'bingphoto');
 
+// Image Uploads
+$app->post('/imageupload', authorize('user'), 'uploadImage');
+
 /**
  * Routing
  *
@@ -137,6 +140,33 @@ function _delete($collection, $id) {
 	);
 	header("Content-Type: application/json");
 	echo json_encode($data);
+	exit;
+}
+
+/**
+ * Uploading Image
+ */
+function uploadImage() {
+	$allowed = array('jpg, jpeg, gif, svg, png');
+	$ctlName = 'newnoteimage';
+	// http://cmlenz.github.io/jquery-iframe-transport/
+	echo '<textarea data-type="application/json">';
+	if (isset($_FILES[$ctlName]) && $_FILES[$ctlName]['error'] == 0) {
+		echo $_FILES[$ctlName]['name'];
+		$extension = pathinfo($_FILES[$ctlName]['name'], PATHINFO_EXTENSION);
+		if (!in_array(strtolower($extension), $allowed)) {
+			echo '{"error":{"text":"Unsupported filetype."}}';
+		}
+		$dir = "./imgs/".$_SESSION['user']['_id'];
+		if (!is_dir($dir)) {mkdir($dir);
+		}
+
+		if (move_uploaded_file($_FILES[$ctlName]['tmp_name'], $dir."/".$_FILES[$ctlName]['name'])) {
+			echo '{"success"}';
+		}
+		echo '{"error":"..."}';
+	}
+	echo '</textarea>';
 	exit;
 }
 

@@ -252,6 +252,12 @@ ul {
 .note-cmds .delete-note:hover {
     color: red;
 }
+.note-cmds .edit-note:hover {
+    color: #4183c4;
+}
+.note-cmds .update-note:hover {
+    color: #5cb85c;
+}
 /*
     Nav Styles
 */

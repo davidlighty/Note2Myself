@@ -1,0 +1,51 @@
+<html>
+
+<head>
+    <title>Slim Application Error</title>
+    <style>
+    body {
+        margin: 0;
+        padding: 30px;
+        font: 12px/1.5 Helvetica, Arial, Verdana, sans-serif;
+    }
+    h1 {
+        margin: 0;
+        font-size: 48px;
+        font-weight: normal;
+        line-height: 48px;
+    }
+    strong {
+        display: inline-block;
+        width: 65px;
+    }
+    </style>
+</head>
+
+<body>
+    <h1>Slim Application Error</h1>
+    <p>The application could not run because of the following error:</p>
+    <h2>Details</h2>
+    <div>
+        <strong>Type:</strong>ErrorException</div>
+    <div>
+        <strong>Code:</strong>2</div>
+    <div>
+        <strong>Message:</strong>move_uploaded_file(./imgs/53c3707c07fc40f80600002bpng): failed to open stream: No such file or directory</div>
+    <div>
+        <strong>File:</strong>C:\Program Files (x86)\Ampps\www\note2myself\api\index.php</div>
+    <div>
+        <strong>Line:</strong>161</div>
+    <h2>Trace</h2><pre><div>#0 [internal function]: Slim\Slim::handleErrors(2, 'move_uploaded_f...', 'C:\\Program File...', 161, Array)
+<div>#1 C:\Program Files (x86)\Ampps\www</div>ote2myself\api\index.php(161): move_uploaded_file('C:\\Users\\David....', './imgs/53c3707c...')
+<div>#2 [internal function]: uploadImage()
+<div>#3 C:\Program Files (x86)\Ampps\www</div>ote2myself\api\Slim\Route.php(462): call_user_func_array('uploadImage', Array)
+<div>#4 C:\Program Files (x86)\Ampps\www</div>ote2myself\api\Slim\Slim.php(1326): Slim\Route->dispatch()
+<div>#5 C:\Program Files (x86)\Ampps\www</div>ote2myself\api\Slim\Middleware\Flash.php(85): Slim\Slim->call()
+<div>#6 C:\Program Files (x86)\Ampps\www</div>ote2myself\api\Slim\Middleware\MethodOverride.php(92): Slim\Middleware\Flash->call()
+<div>#7 C:\Program Files (x86)\Ampps\www</div>ote2myself\api\Slim\Middleware\PrettyExceptions.php(67): Slim\Middleware\MethodOverride->call()
+<div>#8 C:\Program Files (x86)\Ampps\www</div>ote2myself\api\Slim\Slim.php(1271): Slim\Middleware\PrettyExceptions->call()
+<div>#9 C:\Program Files (x86)\Ampps\www</div>ote2myself\api\index.php(319): Slim\Slim->run()
+<div>#10 {main}</pre>
+</body>
+
+</html>

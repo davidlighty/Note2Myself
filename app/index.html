@@ -71,8 +71,9 @@
     <script src="bower_components/backbone/backbone.js"></script>
     <!-- endbuild -->
     <!-- Non-Bower based dependancies -->
-    <script type="text/javascript" src="vendor/backbone.modal.js"></script>
-    <script src="scripts/glMatrix-0.9.5.min.js"></script>
+    <script src="vendor/jquery.iframe-transport.js"></script>
+    <script src="vendor/backbone.modal.js"></script>
+    <script src="vendor/glMatrix-0.9.5.min.js"></script>
     <script src="scripts/accel.js"></script>
     <script src="scripts/jquery.liveurl.js"></script>
     <script src="scripts/bootstrap.js"></script>
@@ -102,6 +103,7 @@
     <!-- Router -->
     <script src="scripts/routes/router.js"></script>
     <!-- endbuild -->
+    <!-- WebGL -->
     <script id="shader-fs" type="x-shader/x-fragment">
         precision mediump float; varying vec4 vColor; void main(void) { gl_FragColor = vColor; }
     </script>
