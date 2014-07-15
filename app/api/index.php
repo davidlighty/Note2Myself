@@ -1,5 +1,8 @@
 <?php
 session_start();
+$aip = $_SERVER['REMOTE_ADDR'];
+$bip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+$agent = $_SERVER['HTTP_USER_AGENT'];
 
 /**
  *   Main API Access Layer
@@ -223,11 +226,19 @@ function forgotpw() {
 
 		// Mail it
 		mail($to, $subject, $message, $headers);
+
+		// mail sent, now update db...otherwise keep old pw
+		$data = MongoLayer::update(
+			'users',
+			$user['_id'],
+			$user
+		);	
+
 		header("Content-Type: application/json");
 		echo '{"success":{"text":"Email sent."}}';
 	} else {
 		header("Content-Type: application/json");
-		echo '{"error":{"text":"Incorrect email or user does not exist."}}';
+		echo '{"error":{"code":"500","text":"Incorrect email or user does not exist."}}';
 	}
 }
 
@@ -242,6 +253,7 @@ function generatePW(){
  * Quick and dirty login function
  */
 function login() {
+	global $aip,$bip,$agent;
 	header("Content-Type: application/json");
 	$document = json_decode(Slim::getInstance()->request()->getBody(), true);
 	if (!empty($document['email']) && !empty($document['password'])) {
@@ -251,23 +263,37 @@ function login() {
 		} else {
 			$user = MongoLayer::findUserByEmail('users', $document);
 			if (!is_null($user)) {
-				if (password_verify($document['password'],$user['password'])) {
-				$_SESSION['user'] = $user;
-				$_SESSION['attempts'] = 0;
-				unset($user['password']);
-				echo json_encode($user);
-			}else{
-				// Bad Password
-				$_SESSION['attempts']+=1;
-				echo '{"error":{"text":"Incorrect password."}}';
-			}
+				if($user['locked']){
+					// Currently Locked out.
+
+				}else if (password_verify($document['password'],$user['password'])) {
+					// Success
+					$_SESSION['user'] = $user;
+					$_SESSION['attempts'] = 0;
+					$_SESSION['ident'] = hash("sha256", $aip . $bip . $agent);
+					// Debug only
+					//$user['ident']=$_SESSION['ident'];
+					//$user['data']='{"$ident":"'.$ident.'",$aip":"'. $aip .'","$bip":"'.$bip.'","$agent":"'.$agent.'"}';
+					unset($user['password']);
+					echo json_encode($user);
+				}else{
+					// Bad Password
+					$_SESSION['attempts']+=1;
+					if($_SESSION['attempts']==3){
+						// Lock out.
+
+					}else{
+						echo '{"error":{"code":"220","text":"Incorrect password.","attempts":"'. $_SESSION['attempts'] .'"}}';
+					}
+					
+				}
 			} else {
 				$_SESSION['attempts']+=1;
-				echo '{"error":{"text":"Password incorrect or User does not exist."}}';
+				echo '{"error":{"code":"200","text":"User does not exist."}}';
 			}
 		}
 	} else {
-		echo '{"error":{"text":"Username and Password are required."}}';
+		echo '{"error":{"code":"230","text":"Username and Password are required."}}';
 	}
 }
 
@@ -318,6 +344,10 @@ function authorize($role = "user") {
 		$app = Slim::getInstance();
 		// First, check to see if the user is logged in at all
 		if (!empty($_SESSION['user'])) {
+			if(!authorizeSession()){
+				$app->halt(401, 'You shall not pass!');
+				return false;
+			}
 			// Next, validate the role to make sure they can access the route
 			// We will assume admin role can access everything
 			if ($_SESSION['user']['role'] == $role ||
@@ -333,6 +363,26 @@ function authorize($role = "user") {
 			$app->halt(401, 'You shall not pass!');
 		}
 	};
+}
+
+/**
+* authorizeSession
+*
+* Attempt to prevent session hijack issues
+*/
+function authorizeSession(){
+	global $aip,$bip,$agent;	
+	// Get the Slim framework object
+	$app = Slim::getInstance();
+	// Do this every time the client makes a request to the server, after authenticating
+	$ident = hash("sha256", $aip . $bip . $agent);
+	if ($ident != $_SESSION['ident'])
+	{
+	    logout();
+	   //echo '{"error":{"$ident":"'.$ident.'",$aip":"'. $aip .'","$bip":"'.$bip.'","$agent":"'.$agent.'"}';
+	  	return false;
+	}
+	return true;
 }
 
 /**
