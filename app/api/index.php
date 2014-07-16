@@ -1,7 +1,7 @@
 <?php
 session_start();
-$aip = $_SERVER['REMOTE_ADDR'];
-$bip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+$aip   = $_SERVER['REMOTE_ADDR'];
+$bip   = $_SERVER['HTTP_X_FORWARDED_FOR'];
 $agent = $_SERVER['HTTP_USER_AGENT'];
 
 /**
@@ -24,8 +24,8 @@ use noteAppApi\MongoLayer;
 use Slim\Slim;
 
 /**
-* Constants for the app
-*/
+ * Constants for the app
+ */
 define('MIN_PHP', '5.5');
 
 /**
@@ -35,9 +35,8 @@ Slim::registerAutoloader();
 $app = new Slim();
 
 $app->config(array(
-   'templates.path' =>   './templates'
-   ));
-
+		'templates.path' => './templates'
+	));
 
 // Login Route
 $app->post('/login', 'login');
@@ -200,9 +199,9 @@ function forgotpw() {
 	$document = json_decode(Slim::getInstance()->request()->getBody(), true);
 	if (!empty($document['email']) && !is_null(MongoLayer::findOne('users', array('email' => $document['email'])))) {
 		// Valid user...
-		$user = MongoLayer::findOne('users', array('email' => $user['email']));
-		$newPass = generatePW();
-		$user['password'] = password_hash($newPass,PASSWORD_DEFAULT);
+		$user             = MongoLayer::findOne('users', array('email' => $user['email']));
+		$newPass          = generatePW();
+		$user['password'] = password_hash($newPass, PASSWORD_DEFAULT);
 		// The message
 		// message
 		$message = '
@@ -217,26 +216,12 @@ function forgotpw() {
 					</html>
 					';
 
-		// Send
-		$headers = 'MIME-Version: 1.0'."\r\n";
-		$headers .= 'Content-type: text/html; charset=iso-8859-1'."\r\n";
-		$headers .= 'To:'.$user['email']."\r\n";
-		$headers .= 'From: NoteApp <pwrecovery@noteapp.com>'."\r\n";
-
-		$to .= $user['email'];
-
-		// subject
-		$subject = 'NoteApp Password Recovery Email';
-
-		// Mail it
-		mail($to, $subject, $message, $headers);
-
 		// mail sent, now update db...otherwise keep old pw
 		$data = MongoLayer::update(
 			'users',
 			$user['_id'],
 			$user
-		);	
+		);
 
 		header("Content-Type: application/json");
 		echo '{"success":{"text":"Email sent."}}';
@@ -247,11 +232,11 @@ function forgotpw() {
 }
 
 /**
-* generatePW
-* 
-* Generate a random password
-*/
-function generatePW(){
+ * generatePW
+ *
+ * Generate a random password
+ */
+function generatePW() {
 	return base_convert(rand(78364164096, 2821109907455), 10, 36);
 }
 
@@ -261,7 +246,7 @@ function generatePW(){
  * Quick and dirty login function
  */
 function login() {
-	global $aip,$bip,$agent;
+	global $aip, $bip, $agent;
 	header("Content-Type: application/json");
 	$document = json_decode(Slim::getInstance()->request()->getBody(), true);
 	if (!empty($document['email']) && !empty($document['password'])) {
@@ -271,29 +256,29 @@ function login() {
 		} else {
 			$user = MongoLayer::findUserByEmail('users', $document);
 			if (!is_null($user)) {
-				if($user['locked']){
+				if ($user['locked']) {
 					// Currently Locked out.
 
-				}else if (password_verify($document['password'],$user['password'])) {
+				} else if (password_verify($document['password'], $user['password'])) {
 					// Success
-					$_SESSION['user'] = $user;
+					$_SESSION['user']     = $user;
 					$_SESSION['attempts'] = 0;
-					$_SESSION['ident'] = hash("sha256", $aip . $bip . $agent);
+					$_SESSION['ident']    = hash("sha256", $aip.$bip.$agent);
 					// Debug only
 					//$user['ident']=$_SESSION['ident'];
 					//$user['data']='{"$ident":"'.$ident.'",$aip":"'. $aip .'","$bip":"'.$bip.'","$agent":"'.$agent.'"}';
 					unset($user['password']);
 					echo json_encode($user);
-				}else{
+				} else {
 					// Bad Password
-					$_SESSION['attempts']+=1;
-					if($_SESSION['attempts']>=3){
+					$_SESSION['attempts'] += 1;
+					if ($_SESSION['attempts'] >= 3) {
 						// Lock out.
 						echo '{"error":{"code":"225","text":"Account Locked."}}';
-					}else{
-						echo '{"error":{"code":"220","text":"Incorrect password.","attempts":"'. $_SESSION['attempts'] .'"}}';
+					} else {
+						echo '{"error":{"code":"220","text":"Incorrect password.","attempts":"'.$_SESSION['attempts'].'"}}';
 					}
-					
+
 				}
 			} else {
 				echo '{"error":{"code":"200","text":"User does not exist."}}';
@@ -325,8 +310,8 @@ function register($user) {
 	$isUser = MongoLayer::findOne('users', array('email' => $user['email']));
 	if (is_null($isUser)) {
 		// Hash password using php 5.5 functions (http://php.net/manual/en/function.password-hash.php)
-		$user['password'] = password_hash($user['password'],PASSWORD_DEFAULT);
-		$newUser = array(
+		$user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
+		$newUser          = array(
 			'email'    => $user['email'],
 			'password' => $user['password'],
 			'role'     => 'user'
@@ -358,7 +343,7 @@ function authorize($role = "user") {
 		$app = Slim::getInstance();
 		// First, check to see if the user is logged in at all
 		if (!empty($_SESSION['user'])) {
-			if(!authorizeSession()){
+			if (!authorizeSession()) {
 				$app->halt(401, 'You shall not pass!');
 				return false;
 			}
@@ -381,29 +366,50 @@ function authorize($role = "user") {
 }
 
 /**
-* authorizeSession
-*
-* Attempt to prevent session hijack issues
-*/
-function authorizeSession(){
-	global $aip,$bip,$agent;	
+ * authorizeSession
+ *
+ * Attempt to prevent session hijack issues
+ */
+function authorizeSession() {
+	global $aip, $bip, $agent;
 	// Get the Slim framework object
-	$app = Slim::getInstance();
-	$lastAccess = (time() - $_SESSION['access']) * 60;
-	if($lastAccess >= 20){
+	$app        = Slim::getInstance();
+	$lastAccess = (time()-$_SESSION['access'])/60;
+	if ($lastAccess >= 20) {
 		// Too long. Expired
 		logout();
 		return false;
 	}
 	// Do this every time the client makes a request to the server, after authenticating
-	$ident = hash("sha256", $aip . $bip . $agent);
-	if ($ident != $_SESSION['ident'])
-	{
-	    logout();
-	   //echo '{"error":{"$ident":"'.$ident.'",$aip":"'. $aip .'","$bip":"'.$bip.'","$agent":"'.$agent.'"}';
-	  	return false;
+	$ident = hash("sha256", $aip.$bip.$agent);
+	if ($ident != $_SESSION['ident']) {
+		logout();
+		//echo '{"error":{"$ident":"'.$ident.'",$aip":"'. $aip .'","$bip":"'.$bip.'","$agent":"'.$agent.'"}';
+		return false;
 	}
 	return true;
+}
+
+/**
+ * sendEmail
+ *
+ * Sends an email to the user
+ */
+function sendEmail($to, $subject, $msgHtml) {
+	// Send
+	$headers = 'MIME-Version: 1.0'."\r\n";
+	$headers .= 'Content-type: text/html; charset=iso-8859-1'."\r\n";
+
+	$headers .= 'To:'.$to."\r\n";
+	$headers .= 'From: NoteApp <support@noteapp.com>'."\r\n";
+
+	try {
+		// Mail it
+		mail($to, $subject, $msgHtml, $headers);
+	} catch (Exception $err) {
+		// Failed to send email.
+	}
+
 }
 
 /**
@@ -418,12 +424,12 @@ function bingphoto() {
 }
 
 /**
-* verifyPHPFailIfNessecary
-*
-* Verify the minimum allowable PHP version
-*/
-function verifyPHPFailIfNessecary(){
-	$ver=phpversion();
+ * verifyPHPFailIfNessecary
+ *
+ * Verify the minimum allowable PHP version
+ */
+function verifyPHPFailIfNessecary() {
+	$ver = phpversion();
 	if (version_compare(phpversion(), MIN_PHP, '<')) {
 		die('Requires PHP 5.5');
 	}
@@ -433,9 +439,9 @@ function verifyPHPFailIfNessecary(){
 
 /**
  * Start Api app
- * 
+ *
  * Verify our PHP version before we spin up.
  */
-if(verifyPHPFailIfNessecary()){
+if (verifyPHPFailIfNessecary()) {
 	$app->run();
 }
