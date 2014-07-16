@@ -1,9 +1,9 @@
 (function() {
     var __bind = function(fn, me) {
-        return function() {
-            return fn.apply(me, arguments);
-        };
-    },
+            return function() {
+                return fn.apply(me, arguments);
+            };
+        },
         __hasProp = {}.hasOwnProperty,
         __extends = function(child, parent) {
             for (var key in parent) {
@@ -49,6 +49,7 @@
                 options = {};
             }
             data = this.serializeData();
+            $('body').addClass('modal--open'); // Add a class to the body that a modal is open
             this.$el.addClass("" + this.prefix + "-wrapper");
             this.modalEl = Backbone.$('<div />').addClass("" + this.prefix + "-modal");
             if (this.template) {

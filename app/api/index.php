@@ -41,6 +41,7 @@ $app->config(array(
 // Login Route
 $app->post('/login', 'login');
 $app->post('/forgot', 'forgotpw');
+$app->get('/unlock', 'unlockAccount');
 $app->post('/logout', 'logout');
 
 // Bing photo
@@ -216,6 +217,8 @@ function forgotpw() {
 					</html>
 					';
 
+		sendEmail($user['email'], 'Password Recovery Email', $message);
+
 		// mail sent, now update db...otherwise keep old pw
 		$data = MongoLayer::update(
 			'users',
@@ -229,6 +232,95 @@ function forgotpw() {
 		header("Content-Type: application/json");
 		echo '{"error":{"code":"500","text":"Incorrect email or user does not exist."}}';
 	}
+}
+
+/**
+ * lockAccount
+ *
+ * Lock the specified account, change password, and email an unlock link
+ */
+function lockAccount($user) {
+	$newPass =generatePW();
+	$user['password'] = password_hash($newPass, PASSWORD_DEFAULT);
+	$unlockKey=generatePW();
+	$user['lockkey']  = password_hash($unlockKey, PASSWORD_DEFAULT);
+	$URL              = getURL().'/api/unlock'; // http://localhost/note2myself/api/unlock is desired test url.
+	$unlockLink       = '<a href='.$URL.'?key='.$unlockKey.'&email='.$user['email'].'>Unlock Account</a>';
+
+	// account locked, update before attempting to send email.
+	$data = MongoLayer::update(
+		'users',
+		$user['_id'],
+		$user
+	);
+
+	// message
+	$message = '
+		<html>
+		<head>
+		  <title>Account Unlock</title>
+		</head>
+		<body>
+			<p>This account is locked due to too many failed login attmepts.</p>
+			<p>Your password has been changed:'. $newPass  .'</p>
+		 	<p>'.$unlockLink.'</p>
+		</body>
+		</html>
+	';
+
+	sendEmail($user['email'], 'Unlock Your Account', $message);
+
+	header("Content-Type: application/json");
+	echo '{"success":{"text":"Email sent."}}';
+}
+
+/**
+ * unlockAccount
+ *
+ * Unlock this account based upon email and unlock key.
+ */
+function unlockAccount() {
+	// Get the Slim framework object
+	$app = Slim::getInstance();
+
+	$email     = $app->request()->params('email');
+	$unlockKey = $app->request()->params('key');
+	if (is_null($email) || is_null($unlockKey)) {
+		// Fail.
+		$app->halt(403, 'Bad Unlock Paramaters.');
+		exit;
+	} else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		// Not an email address
+		$app->halt(403, 'Invalid email provided.');
+		exit;
+	}
+
+	$user = MongoLayer::findOne('users', array('email' => $email));
+	if (is_null($isUser)) {
+		// Not a valid user
+		$app->halt(403, 'Invalid user.');
+		exit;
+	}else if(is_null($isUser['lockkey']){
+		// Not locked.
+		$app->redirect('../index.html');
+		exit; // take me to the homepage.
+	}else if(!password_verify($unlockKey, $user['lockkey'])){
+		// Invalid Key
+		$app->halt(403, 'Invalid unlock reference.');
+		exit;
+	}
+
+	// Pass, unlock the user.
+	$user['lockkey']=null;
+	// account locked, update before attempting to send email.
+	$data = MongoLayer::update(
+		'users',
+		$user['_id'],
+		$user
+	);
+
+	$app->redirect('../index.html');
+	exit; // take me to the homepage.
 }
 
 /**
@@ -274,6 +366,7 @@ function login() {
 					$_SESSION['attempts'] += 1;
 					if ($_SESSION['attempts'] >= 3) {
 						// Lock out.
+						lockAccount($user);
 						echo '{"error":{"code":"225","text":"Account Locked."}}';
 					} else {
 						echo '{"error":{"code":"220","text":"Incorrect password.","attempts":"'.$_SESSION['attempts'].'"}}';
@@ -410,6 +503,21 @@ function sendEmail($to, $subject, $msgHtml) {
 		// Failed to send email.
 	}
 
+}
+
+/**
+ * getURL
+ *
+ * Need this for when we are using a subdomain website. =>  http://localhost/testwebsite/
+ * Thanks : http://stackoverflow.com/questions/2820723/how-to-get-base-url-with-php
+ */
+function getURL() {
+	return sprintf(
+		"%s://%s%s",
+		isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'?'https':'http',
+		$_SERVER['SERVER_NAME'],
+		$_SERVER['REQUEST_URI']
+	);
 }
 
 /**
