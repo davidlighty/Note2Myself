@@ -18,7 +18,7 @@ $agent = $_SERVER['HTTP_USER_AGENT'];
  */
 
 require 'Slim/Slim.php';
-require 'mongo/mongoLayer.php';
+require 'lib/mongoLayer.php';
 
 use noteAppApi\MongoLayer;
 use Slim\Slim;
