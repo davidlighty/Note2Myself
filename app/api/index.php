@@ -157,6 +157,8 @@ function _delete($collection, $id) {
 }
 
 /**
+ * uploadImage
+ *
  * Uploading Image
  */
 function uploadImage() {
@@ -190,7 +192,9 @@ function uploadImage() {
  */
 
 /**
- *	Validate email and send email
+ *	forgotpw
+ *
+ *  Validate email and send email
  */
 function forgotpw() {
 	$document = json_decode(Slim::getInstance()->request()->getBody(), true);
@@ -243,6 +247,8 @@ function forgotpw() {
 }
 
 /**
+* generatePW
+* 
 * Generate a random password
 */
 function generatePW(){
@@ -250,6 +256,8 @@ function generatePW(){
 }
 
 /**
+ * login
+ *
  * Quick and dirty login function
  */
 function login() {
@@ -297,6 +305,8 @@ function login() {
 }
 
 /**
+ * logout
+ *
  * Reset our session.
  */
 function logout() {
@@ -306,6 +316,11 @@ function logout() {
 	echo '{"success":{"text":"Session Removed."}}';
 }
 
+/**
+ * register
+ *
+ * Register a new user.
+ */
 function register($user) {
 	$isUser = MongoLayer::findOne('users', array('email' => $user['email']));
 	if (is_null($isUser)) {
@@ -403,7 +418,9 @@ function bingphoto() {
 }
 
 /**
+* verifyPHPFailIfNessecary
 *
+* Verify the minimum allowable PHP version
 */
 function verifyPHPFailIfNessecary(){
 	$ver=phpversion();
