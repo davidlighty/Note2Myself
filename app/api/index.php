@@ -48,8 +48,9 @@ $app->post('/logout', 'logout');
 // Bing photo
 $app->get('/bingphoto', 'bingphoto');
 
-// Image Uploads
+// Images
 $app->post('/imageupload', authorize('user'), 'uploadImage');
+$app->get('/image/:id', authorize('user'), 'getImage');
 
 /**
  * Routing
@@ -178,12 +179,32 @@ function uploadImage() {
 			echo '{"error":{"text":"Unsupported filetype.", "filetype":"'.$extension.'"}}';
 		} else {
 			// Save into db
-			$metadata = array("userid" => $uid);
+			$metadata = array("userid" => $uid, "filetype" => $extension);
 			$data     = MongoLayer::saveImage($ctlName, $metadata);
 			echo '{"success": {"id":"'.$data.'","filename":"'.$_FILES[$ctlName]['name'].'"}}';
 		}
 	}
 	echo '</textarea>';
+}
+
+/**
+ * getImage
+ *
+ * Create Image from db
+ * $id = image id attribute
+ */
+function getImage($id) {
+	// retrieve file from collection
+	$file = MongoLayer::getImage($id);
+	if (!$file) {
+		header("Content-Type: application/json");
+		echo '{"error":{"text":"Image not found"}}';
+		exit;
+	}
+	// send headers and file data
+	//echo var_dump($file);
+	header('Content-type: image/'.substr($file->filename, -3));
+	echo $file->getBytes();
 }
 
 /**

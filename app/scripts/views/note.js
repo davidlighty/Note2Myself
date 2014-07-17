@@ -31,15 +31,25 @@ notesApp.Views = notesApp.Views || {};
             var nType = this.model.get('type'),
                 typeView;
             if (nType === 'website') {
-                typeView = new notesApp.Views.NoteTypeURL({model: this.model});
+                typeView = new notesApp.Views.NoteTypeURL({
+                    model: this.model
+                });
             } else if (nType === 'todo') {
-                typeView = new notesApp.Views.NoteTypeTodo({model: this.model});
+                typeView = new notesApp.Views.NoteTypeTodo({
+                    model: this.model
+                });
+            } else if (nType === 'image') {
+                typeView = new notesApp.Views.NoteTypeImage({
+                    model: this.model
+                });
             } else {
                 // Default is text type
-                typeView = new notesApp.Views.NoteTypeText({model: this.model});
+                typeView = new notesApp.Views.NoteTypeText({
+                    model: this.model
+                });
             }
-            console.log('typeView',typeView);
-             this.$('.note-data').append(typeView.render().el);
+            console.log('typeView', typeView);
+            this.$('.note-data').append(typeView.render().el);
         },
         clearAttributes: function() {
             this.$('.note-title.edit').val('');

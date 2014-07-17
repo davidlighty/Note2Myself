@@ -138,6 +138,15 @@ class MongoLayer {
 				'_id' => new MongoId($id)
 			);
 
+			// Read item to check for image type to remove that as well.
+			$note     = self::read($collection, $id);
+			$noteInfo = print_r($note);
+			if ($note && $note['type'] == 'image') {
+				$imgstatus = array('imageid' => $note['imageId']);
+				// Delete the image
+				$imgstatus['isremoved'] = self::deleteImage($note['imageId']);
+			}
+
 			$collection->remove(
 				$criteria,
 				array(
@@ -147,7 +156,12 @@ class MongoLayer {
 
 			$conn->close();
 
-			return array('success' => 'deleted');
+			$return = array('success' => 'deleted', 'note' => $noteInfo);
+			if ($imgstatus) {
+				$return['image'] = $imgstatus;
+			}
+
+			return $return;
 
 		} catch (MongoConnectionException $e) {
 			die('Error connecting to MongoDB server');
@@ -180,10 +194,45 @@ class MongoLayer {
 	}
 
 	/**
+	 * getImage
 	 *
+	 * Returns a MongoGridFSFile [http://php.net/manual/en/class.mongogridfsfile.php]
 	 */
 	public static function getImage($id) {
+		try {
+			$conn = new MongoClient();
+			$_db  = $conn->{self::DB_NAME};
+			$grid = $_db->getGridFS();
+			$img  = $grid->get(new MongoId($id));
+			$conn->close();
+			return $img;
 
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
+	}
+
+	/**
+	 * deleteImage
+	 *
+	 * Returns a bool
+	 */
+	public static function deleteImage($id) {
+		try {
+			$conn      = new MongoClient();
+			$_db       = $conn->{self::DB_NAME};
+			$grid      = $_db->getGridFS();
+			$isremoved = $grid->delete(new MongoId($id));
+			$conn->close();
+			return $isremoved;
+
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
 	}
 
 	/**
