@@ -27,6 +27,7 @@ use Slim\Slim;
  * Constants for the app
  */
 define('MIN_PHP', '5.5');
+define('MODE','debug');
 
 /**
  * Create API App
@@ -300,7 +301,7 @@ function unlockAccount() {
 		// Not a valid user
 		$app->halt(403, 'Invalid user.');
 		exit;
-	}else if(is_null($isUser['lockkey']){
+	}else if(is_null($isUser['lockkey'])){
 		// Not locked.
 		$app->redirect('../index.html');
 		exit; // take me to the homepage.
@@ -356,6 +357,7 @@ function login() {
 					$_SESSION['user']     = $user;
 					$_SESSION['attempts'] = 0;
 					$_SESSION['ident']    = hash("sha256", $aip.$bip.$agent);
+					$_SESSION['access'] = time();
 					// Debug only
 					//$user['ident']=$_SESSION['ident'];
 					//$user['data']='{"$ident":"'.$ident.'",$aip":"'. $aip .'","$bip":"'.$bip.'","$agent":"'.$agent.'"}';
@@ -437,7 +439,7 @@ function authorize($role = "user") {
 		// First, check to see if the user is logged in at all
 		if (!empty($_SESSION['user'])) {
 			if (!authorizeSession()) {
-				$app->halt(401, 'You shall not pass!');
+				$app->halt(401, 'Session Auth Failed');
 				return false;
 			}
 			// Next, validate the role to make sure they can access the route
@@ -449,11 +451,11 @@ function authorize($role = "user") {
 				return true;
 			} else {
 				// If a user is logged in, but doesn't have permissions, return 403
-				$app->halt(403, 'You shall not pass!');
+				$app->halt(403, 'Not sufficent security.');
 			}
 		} else {
 			// If a user is not logged in at all, return a 401
-			$app->halt(401, 'You shall not pass!');
+			$app->halt(401, 'Session not found.');
 		}
 	};
 }
@@ -467,10 +469,11 @@ function authorizeSession() {
 	global $aip, $bip, $agent;
 	// Get the Slim framework object
 	$app        = Slim::getInstance();
-	$lastAccess = (time()-$_SESSION['access'])/60;
-	if ($lastAccess >= 20) {
+	$lastAccessInMin = (time()-$_SESSION['access'])/60;
+	if ($lastAccessInMin >= 20) {
 		// Too long. Expired
 		logout();
+		$app->halt(401, 'Session Expired. '. $lastAccessInMin . ' '. $_SESSION['access']);
 		return false;
 	}
 	// Do this every time the client makes a request to the server, after authenticating
