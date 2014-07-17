@@ -27,7 +27,7 @@ use Slim\Slim;
  * Constants for the app
  */
 define('MIN_PHP', '5.5');
-define('MODE','debug');
+define('MODE', 'debug');
 
 /**
  * Create API App
@@ -66,10 +66,9 @@ $app->get('/:collection/:id', authorize('user'), '_read');
 $app->put('/:collection/:id', authorize('user'), '_update');
 $app->delete('/:collection/:id', authorize('user'), '_delete');
 
-
 /**
-* Route Targets
-*/
+ * Route Targets
+ */
 
 /**
  * _list
@@ -168,27 +167,23 @@ function _delete($collection, $id) {
  * Uploading Image
  */
 function uploadImage() {
-	$allowed = array('jpg, jpeg, gif, svg, png');
+	$allowed = array('jpg', 'jpeg', 'gif', 'svg', 'png');
 	$ctlName = 'newnoteimage';
+	$uid     = $_SESSION['user']['_id'];
 	// http://cmlenz.github.io/jquery-iframe-transport/
 	echo '<textarea data-type="application/json">';
 	if (isset($_FILES[$ctlName]) && $_FILES[$ctlName]['error'] == 0) {
-		echo $_FILES[$ctlName]['name'];
 		$extension = pathinfo($_FILES[$ctlName]['name'], PATHINFO_EXTENSION);
 		if (!in_array(strtolower($extension), $allowed)) {
-			echo '{"error":{"text":"Unsupported filetype."}}';
+			echo '{"error":{"text":"Unsupported filetype.", "filetype":"'.$extension.'"}}';
+		} else {
+			// Save into db
+			$metadata = array("userid" => $uid);
+			$data     = MongoLayer::saveImage($ctlName, $metadata);
+			echo '{"success": {"id":"'.$data.'","filename":"'.$_FILES[$ctlName]['name'].'"}}';
 		}
-		$dir = "./imgs/".$_SESSION['user']['_id'];
-		if (!is_dir($dir)) {mkdir($dir);
-		}
-
-		if (move_uploaded_file($_FILES[$ctlName]['tmp_name'], $dir."/".$_FILES[$ctlName]['name'])) {
-			echo '{"success"}';
-		}
-		echo '{"error":"..."}';
 	}
 	echo '</textarea>';
-	exit;
 }
 
 /**
@@ -246,11 +241,11 @@ function forgotpw() {
  * Lock the specified account, change password, and email an unlock link
  */
 function lockAccount($user) {
-	$newPass =generatePW();
+	$newPass          = generatePW();
 	$user['password'] = password_hash($newPass, PASSWORD_DEFAULT);
-	$unlockKey=generatePW();
+	$unlockKey        = generatePW();
 	$user['lockkey']  = password_hash($unlockKey, PASSWORD_DEFAULT);
-	$URL              = getURL().'/api/unlock'; // http://localhost/note2myself/api/unlock is desired test url.
+	$URL              = getURL().'/api/unlock';// http://localhost/note2myself/api/unlock is desired test url.
 	$unlockLink       = '<a href='.$URL.'?key='.$unlockKey.'&email='.$user['email'].'>Unlock Account</a>';
 
 	// account locked, update before attempting to send email.
@@ -268,7 +263,7 @@ function lockAccount($user) {
 		</head>
 		<body>
 			<p>This account is locked due to too many failed login attmepts.</p>
-			<p>Your password has been changed:'. $newPass  .'</p>
+			<p>Your password has been changed:'.$newPass.'</p>
 		 	<p>'.$unlockLink.'</p>
 		</body>
 		</html>
@@ -306,18 +301,18 @@ function unlockAccount() {
 		// Not a valid user
 		$app->halt(403, 'Invalid user.');
 		exit;
-	}else if(is_null($isUser['lockkey'])){
+	} else if (is_null($isUser['lockkey'])) {
 		// Not locked.
 		$app->redirect('../index.html');
-		exit; // take me to the homepage.
-	}else if(!password_verify($unlockKey, $user['lockkey'])){
+		exit;// take me to the homepage.
+	} else if (!password_verify($unlockKey, $user['lockkey'])) {
 		// Invalid Key
 		$app->halt(403, 'Invalid unlock reference.');
 		exit;
 	}
 
 	// Pass, unlock the user.
-	$user['lockkey']=null;
+	$user['lockkey'] = null;
 	// account locked, update before attempting to send email.
 	$data = MongoLayer::update(
 		'users',
@@ -326,7 +321,7 @@ function unlockAccount() {
 	);
 
 	$app->redirect('../index.html');
-	exit; // take me to the homepage.
+	exit;// take me to the homepage.
 }
 
 /**
@@ -363,7 +358,7 @@ function login() {
 					$_SESSION['user']     = $user;
 					$_SESSION['attempts'] = 0;
 					$_SESSION['ident']    = hash("sha256", $aip.$bip.$agent);
-					$_SESSION['access'] = time();
+					$_SESSION['access']   = time();
 					// Debug only
 					//$user['ident']=$_SESSION['ident'];
 					//$user['data']='{"$ident":"'.$ident.'",$aip":"'. $aip .'","$bip":"'.$bip.'","$agent":"'.$agent.'"}';
@@ -474,12 +469,12 @@ function authorize($role = "user") {
 function authorizeSession() {
 	global $aip, $bip, $agent;
 	// Get the Slim framework object
-	$app        = Slim::getInstance();
+	$app             = Slim::getInstance();
 	$lastAccessInMin = (time()-$_SESSION['access'])/60;
 	if ($lastAccessInMin >= 20) {
 		// Too long. Expired
 		logout();
-		$app->halt(401, 'Session Expired. '. $lastAccessInMin . ' '. $_SESSION['access']);
+		$app->halt(401, 'Session Expired. '.$lastAccessInMin.' '.$_SESSION['access']);
 		return false;
 	}
 	// Do this every time the client makes a request to the server, after authenticating
@@ -515,8 +510,8 @@ function sendEmail($to, $subject, $msgHtml) {
 }
 
 /**
-* Misc Helper Methods
-*/
+ * Misc Helper Methods
+ */
 
 /**
  * getURL

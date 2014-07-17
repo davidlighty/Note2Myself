@@ -2,8 +2,10 @@
 
 namespace noteAppApi;
 
+use \getGridFS;
 use \MongoClient;
 use \MongoConnectionException;
+
 use \MongoException;
 use \MongoId;
 use \MongoRegex;
@@ -156,6 +158,35 @@ class MongoLayer {
 	}
 
 	/**
+	 * saveImage
+	 *
+	 * Save image into the DB with GridFS
+	 */
+	public static function saveImage($fileUpload, $metadata) {
+		try {
+
+			$conn = new MongoClient();
+			$_db  = $conn->{self::DB_NAME};
+			$grid = $_db->getGridFS();
+			$id   = $grid->storeUpload($fileUpload, $metadata);
+			$conn->close();
+			return $id;
+
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
+	}
+
+	/**
+	 *
+	 */
+	public static function getImage($id) {
+
+	}
+
+	/**
 	 * Find single instance
 	 */
 	public static function findOne($collection, $criteria) {
@@ -213,7 +244,7 @@ class MongoLayer {
 			$collection = $_db->{ $collection};
 
 			$criteria = array(
-				'email'    => $user['email']
+				'email' => $user['email']
 			);
 
 			$document = $collection->findOne(

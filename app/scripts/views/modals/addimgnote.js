@@ -35,14 +35,25 @@ notesApp.Views = notesApp.Views || {};
         },
         submit: function() {
             console.log('Save image', this.$('form :file'));
-
+            var self = this;
             $.ajax('./api/imageupload', {
-                // data: this.newAttributes(),
+                data: this.newAttributes(),
                 files: this.$('form :file'),
-                iframe: true
-                    // processData: false
+                iframe: true,
+                processData: false
             }).complete(function(data) {
                 console.log(data);
+                var $data = JSON.parse(data.responseText);
+
+                if ($data.success) {
+                    // Image uploaded, now link to a note.
+                    console.log('$data', $data);
+                    var imgNote = self.newAttributes();
+                    imgNote.imageId = $data.success.id;
+                    imgNote.fileName = $data.success.filename;
+                    console.log('imgNote', imgNote);
+                    notesApp.notes.create(imgNote);
+                }
             });
         }
     });
