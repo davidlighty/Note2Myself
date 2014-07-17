@@ -34,21 +34,45 @@ I took this and wanted to make something more, bigger, grander....like I do with
 
 ---
 
+##### iframe Ajax image uploads
+
+Now supporting image uploads with ajax through a nifty little jQuery plug-in that dynamically creates an iframe to push up the file.
+
+
+##### Account locking
+
+Added the account locking, not only does this change the user's password, but creates a hashed lock key that must be returned with the user's email to be validated and unlocked again.
+
+
+##### No sendmail...
+
+So there isn't any sendmail on windows....I need to test email.  Ugh, no smtp on win8...perhaps we'll 'fake' sending the emails.
+
+
+##### HTML5 Validation issue
+
+I'm supporting validation on the client side with HTML5 validation.  This wasn't working due to an issue with event.preventDefault and Backbone.modal.  The sequence of events for a submit with Backbone.modal is: event.preventDefault -> custom "beforeSubmit" if provided -> if beforeSubmit return false, stop -> run actual submit.  But when I stopped using this method (and thus stopped using event.preventDefault) my HTML5 validation would work, as it was being manually fired in beforeSubmit.  My fix was to move the beforeSubmit in the Backbone.modal code to before preventDefault was fired.  Created a fork on github for this project and added this as a proposed change.  Due to browser support I don't think direct html5 validation should be in directly, rather let the user determine.
+
+
 ##### Note Type Views
 
 Split and create folder/files for each note view type.  Will blend creating a "note view" to pull in the appropriate "type" view.
+
 
 ##### User Auth
 
 Implemented simple User Auth with Slim's encrypted php session support.  Implemented a backbone modal login form [Backbone.Modal](http://awkward.github.io/backbone.modal/)  Only issue I see so far is that re-clicking the same URL/Route doesn't reload like a postback...as you're already on that route.
 
+
 ##### CSS Transitions
 
 Pushed the "quick note" function up into a transitioned element at the top.  Good excerise to learn more about transitions.  Just a little "slide".  Need to make a little transitions library...hmmm.
 
+
 ##### CSS WebGL
 
 I've been working on a side personal project to understand and use [WebGL](https://github.com/davidlighty/3d-Canvas) and I got sidetracking making a neat loading screen while waiting on the MongoLayer to return the notes.
+
 
 ##### MongoLayer and TravisCI
 
@@ -60,6 +84,7 @@ TravisCI was implemented to run all PHP unit tests for the MongoLayer for every 
 ##### Creating the API
 
 Using Slim was pretty easy and straight-forward.  Had some issues with getting the namespacing and autoloader working correctly.
+
 
 ##### Site Init...
 

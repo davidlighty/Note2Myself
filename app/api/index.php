@@ -66,6 +66,11 @@ $app->get('/:collection/:id', authorize('user'), '_read');
 $app->put('/:collection/:id', authorize('user'), '_update');
 $app->delete('/:collection/:id', authorize('user'), '_delete');
 
+
+/**
+* Route Targets
+*/
+
 /**
  * _list
  *
@@ -351,7 +356,8 @@ function login() {
 			if (!is_null($user)) {
 				if ($user['locked']) {
 					// Currently Locked out.
-
+					lockAccount();
+					echo '{"error":{"code":"200","text":"User does not exist."}}';
 				} else if (password_verify($document['password'], $user['password'])) {
 					// Success
 					$_SESSION['user']     = $user;
@@ -503,10 +509,14 @@ function sendEmail($to, $subject, $msgHtml) {
 		// Mail it
 		mail($to, $subject, $msgHtml, $headers);
 	} catch (Exception $err) {
-		// Failed to send email.
+
 	}
 
 }
+
+/**
+* Misc Helper Methods
+*/
 
 /**
  * getURL
