@@ -34,6 +34,42 @@ I took this and wanted to make something more, bigger, grander....like I do with
 
 ---
 
+### Features at project submission
+
+1. MongoDB
+2. PHP Slim Framework API
+3. BackboneJS Frontend
+4. "Single Page App" - All that is "served" is index.html
+5. User Auth System
+	1. Login/Register is forced.
+	2. Forgot Password
+	3. 3 Attempt User lock system
+		1. Lock changes password and provides a secure link to unlock the account.
+6. Note taking system
+	1. Modular, layered note "views" in backbone
+	2. REST API call to get/put/delete with backbone
+	3. iframe ajax image uploader
+	4. Modal based note selection and creation
+	5. LiveURL plugin to detect a web URL.  Auto inputs and validates the website.
+		1. Use returned json data for website description (if provided)
+7. API call to Bing for the Image of the day
+	1. Sets the background to a responsive image.
+	2. Sets the footer copyright + link.
+
+---
+
+### Notes/Thoughts
+
+##### Stopping...
+
+What didn't I finish?  The captcha, which would require a seperate register form, not a hard thing to accomplish and I'm sure I could in another day (day == off work half time).  Also didn't do a register email, the code is there for emails on the locking and forgot password, just not this, again it would be part of a register refactoring to a new form.
+
+What else would I have liked to finish?  The error:event system.  The base of it is already in the site, emit a error:event into the vent object and many things can "listen" to it.  Just didn't have the time to finish a UI push for whatever message would be shown.
+
+A search/filter mechanism, to show only a type of note or to return search results.
+
+A hide notes and view background image function.
+
 ##### Image limit and display
 
 Finished this, project was to only allow 4 images.  Pushed a css only "thumbnail" style, fixed issue with edit mode.
