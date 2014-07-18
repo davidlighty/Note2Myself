@@ -62,6 +62,11 @@ I took this and wanted to make something more, bigger, grander....like I do with
 	1. Used this, but they are not exhaustive.
 9. PHP DocBlocks for PHP Documentor
 	1. The beginnings for documentation are in /api/docs/api, not up to date.
+10. WebGL Loading screen
+	1. Hard to see sometimes, due to the Bing background.
+	2. It's a pure Webgl spinning pyramid.
+	3. Look in accel.js for that code.  Pretty straight forward, it was a demo from another project
+	where I refactored it into better oop style.
 
 ---
 
