@@ -139,8 +139,7 @@ class MongoLayer {
 			);
 
 			// Read item to check for image type to remove that as well.
-			$note     = self::read($collection, $id);
-			$noteInfo = print_r($note);
+			$note = $collection->findOne($criteria);
 			if ($note && $note['type'] == 'image') {
 				$imgstatus = array('imageid' => $note['imageId']);
 				// Delete the image
@@ -156,7 +155,7 @@ class MongoLayer {
 
 			$conn->close();
 
-			$return = array('success' => 'deleted', 'note' => $noteInfo);
+			$return = array('success' => 'deleted', 'note' => $note, '$id' => $id);
 			if ($imgstatus) {
 				$return['image'] = $imgstatus;
 			}
