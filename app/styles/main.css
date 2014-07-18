@@ -151,6 +151,7 @@ ul {
     max-height: 390px;
     width: 33.333%;
     z-index: 10;
+    overflow: hidden;
 }
 .note-item h1 {
     margin: 2px;
