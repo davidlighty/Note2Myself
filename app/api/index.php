@@ -28,6 +28,7 @@ use Slim\Slim;
  */
 define('MIN_PHP', '5.5');
 define('MODE', 'debug');
+define('IMGLIMIT', 4);
 
 /**
  * Create API App
@@ -173,16 +174,21 @@ function uploadImage() {
 	$uid     = $_SESSION['user']['_id'];
 	// http://cmlenz.github.io/jquery-iframe-transport/
 	echo '<textarea data-type="application/json">';
-	if (isset($_FILES[$ctlName]) && $_FILES[$ctlName]['error'] == 0) {
-		$extension = pathinfo($_FILES[$ctlName]['name'], PATHINFO_EXTENSION);
-		if (!in_array(strtolower($extension), $allowed)) {
-			echo '{"error":{"text":"Unsupported filetype.", "filetype":"'.$extension.'"}}';
-		} else {
-			// Save into db
-			$metadata = array("userid" => $uid, "filetype" => $extension);
-			$data     = MongoLayer::saveImage($ctlName, $metadata);
-			echo '{"success": {"id":"'.$data.'","filename":"'.$_FILES[$ctlName]['name'].'"}}';
+	$imgCount = MongoLayer::getCount('notes', array('type' => 'image', 'userid' => $uid));
+	if ($imgCount < IMGLIMIT) {
+		if (isset($_FILES[$ctlName]) && $_FILES[$ctlName]['error'] == 0) {
+			$extension = pathinfo($_FILES[$ctlName]['name'], PATHINFO_EXTENSION);
+			if (!in_array(strtolower($extension), $allowed)) {
+				echo '{"error":{"text":"Unsupported filetype.", "filetype":"'.$extension.'"}}';
+			} else {
+				// Save into db
+				$metadata = array("userid" => $uid, "filetype" => $extension);
+				$data     = MongoLayer::saveImage($ctlName, $metadata);
+				echo '{"success": {"id":"'.$data.'","filename":"'.$_FILES[$ctlName]['name'].'"}}';
+			}
 		}
+	} else {
+		echo '{"error":{"text":"Image limit reached.", "count":"'.$imgCount.'"}}';
 	}
 	echo '</textarea>';
 }

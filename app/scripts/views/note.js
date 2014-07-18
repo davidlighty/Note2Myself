@@ -60,7 +60,7 @@ notesApp.Views = notesApp.Views || {};
             var self = this;
             this.editing = !this.editing;
             // Switch to inputs
-            this.$('.note-title,.note-text,.note-title-edit,.note-text-edit,.update-note,.edit-undo,.edit-note').toggle();
+            this.$('.note-title,.note-text,.note-title-edit,.note-text-edit,.update-note,.edit-undo,.edit-note,.note-text-section img').toggle();
             if (!this.editing) {
                 if (this.modelsave) {
                     this.model = this.modelsave;

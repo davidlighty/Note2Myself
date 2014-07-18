@@ -53,6 +53,10 @@ notesApp.Views = notesApp.Views || {};
                     imgNote.fileName = $data.success.filename;
                     console.log('imgNote', imgNote);
                     notesApp.notes.create(imgNote);
+                } else {
+                    // error
+                    console.log('error', $data.error);
+
                 }
             });
         }

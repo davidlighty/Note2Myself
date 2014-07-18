@@ -4,6 +4,9 @@ notesApp.Views = notesApp.Views || {};
     'use strict';
     notesApp.Views.NoteTypeImage = Backbone.View.extend({
         template: JST['app/scripts/templates/notetype/image.ejs'],
+        events: {
+            'click img': 'showImage'
+        },
         initialize: function() {
             console.log('Init Image Note');
             // To re-render ourself with image.
@@ -22,6 +25,16 @@ notesApp.Views = notesApp.Views || {};
                 console.log('Got Data', data);
             });
 
+        },
+        showImage: function() {
+            var iid = this.model.get('imageId');
+            console.log('show: ' + iid);
+            var fullImageModal = new notesApp.Views.FullImage({
+                model: this.model
+            });
+            //fullImageModal.model.set('imageId', iid);
+            console.log('model', fullImageModal.model);
+            $('.hero-unit').append(fullImageModal.render().el);
         }
     });
 })();

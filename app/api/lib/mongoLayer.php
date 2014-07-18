@@ -170,6 +170,25 @@ class MongoLayer {
 
 	}
 
+	public static function getCount($collection, $criteria) {
+		try {
+			$conn       = new MongoClient();
+			$_db        = $conn->{self::DB_NAME};
+			$collection = $_db->{ $collection};
+
+			$count = $collection->count($criteria);
+
+			$conn->close();
+
+			return $count;
+
+		} catch (MongoConnectionException $e) {
+			die('Error connecting to MongoDB server');
+		} catch (MongoException $e) {
+			die('Error: '.$e->getMessage());
+		}
+	}
+
 	/**
 	 * saveImage
 	 *
@@ -424,12 +443,14 @@ class MongoLayer {
 			}
 
 			// prepare results to be returned
+			$noteCount = $collection->count();
 
 			$output = array(
-				'total'    => $cursor->count(),
-				'pages'    => ceil($cursor->count()/$limit),
-				'criteria' => $criteria,
-				'results'  => array(),
+				'total'     => $cursor->count(),
+				'pages'     => ceil($cursor->count()/$limit),
+				'criteria'  => $criteria,
+				'notecount' => $noteCount,
+				'results'   => array()
 			);
 
 			foreach ($cursor as $result) {

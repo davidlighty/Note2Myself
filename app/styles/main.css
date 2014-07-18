@@ -8,7 +8,7 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     padding: 5px 10px;
@@ -16,8 +16,8 @@ footer {
     width: 100%;
     background: rgba(0, 22, 55, 0.6);
 }
-footer a{
-	color:#fff;
+footer a {
+    color: #fff;
 }
 .copy {
     float: left;
@@ -25,9 +25,9 @@ footer a{
 .img-info {
     float: right;
 }
-input:not(:focus):invalid,.alert-error,.invalid{
-    color:#fff;
-    background: rgba(255,120,120,0.5);
+input:not(:focus):invalid, .alert-error, .invalid {
+    color: #fff;
+    background: rgba(255, 120, 120, 0.5);
 }
 input:focus:invalid {
     outline: 2px solid blue;
@@ -47,15 +47,6 @@ input:focus:invalid {
     position: relative;
     bottom: -29px;
 }
-
-body.modal--open .content-wrap {
-    -webkit-filter: blur(5px);
-    -ms-filter: blur(5px);
-    -moz-filter: blur(5px);
-    -o-filter: blur(5px);
-    filter: blur(5px);
-}
-
 .content-wrap {
     width: 100%;
     background: rgba(85, 79, 103, 0.3) no-repeat center center fixed;
@@ -186,6 +177,23 @@ ul {
 }
 .note-item textarea {
     height: 100%;
+}
+.note-image {
+    float: left;
+}
+.note-item img {
+    max-width: 100%;
+    height: auto;
+    max-height: 300px;
+    width: auto\9;
+    /* ie8 */
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px 0px black;
+}
+.note-type-image .note-text {
+    float: left;
+    margin-left: 50%;
+    width: auto;
 }
 .note-title-edit, .note-text-edit {
     display: none;
@@ -332,7 +340,6 @@ ul {
     background: #e3ebc3;
     background: rgba(0, 22, 55, .6);
 }
-
 #new-todo-list {
     padding: 6px;
 }
