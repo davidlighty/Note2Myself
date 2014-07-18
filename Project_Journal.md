@@ -33,6 +33,11 @@ I took this and wanted to make something more, bigger, grander....like I do with
 	> Site: http://backbonejs.org/
 
 ---
+
+##### Image limit and display
+
+Finished this, project was to only allow 4 images.  Pushed a css only "thumbnail" style, fixed issue with edit mode.
+
 ##### GridFS
 
 Well to support in db image files with MongoDB means that we need to use GridFS.  It is part of PHP with [MongoGridFSFile](http://php.net/manual/en/class.mongogridfsfile.php).  Wow, and it will handle the upload for you just about!!  Skip all the file move, etc.  Just test for supported filetypes or other validation and pass the control name into that class, done.  Very nice.
