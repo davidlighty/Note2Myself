@@ -45,6 +45,9 @@ I took this and wanted to make something more, bigger, grander....like I do with
 	2. Forgot Password
 	3. 3 Attempt User lock system
 		1. Lock changes password and provides a secure link to unlock the account.
+	4. Encrypted Sessions
+	5. Session hijack prevention (based on 3 client items hash verification)
+	6. API Authorization by Role (had to a user AND a certain role)
 6. Note taking system
 	1. Modular, layered note "views" in backbone
 	2. REST API call to get/put/delete with backbone
@@ -55,6 +58,10 @@ I took this and wanted to make something more, bigger, grander....like I do with
 7. API call to Bing for the Image of the day
 	1. Sets the background to a responsive image.
 	2. Sets the footer copyright + link.
+8. PHP Unit Tests & TravisCI
+	1. Used this, but they are not exhaustive.
+9. PHP DocBlocks for PHP Documentor
+	1. The beginnings for documentation are in /api/docs/api, not up to date.
 
 ---
 
